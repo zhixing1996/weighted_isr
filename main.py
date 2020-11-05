@@ -11,9 +11,6 @@ from tools.update import update
 from ROOT import TCanvas, TMath, TF1, TChain
 from math import *
 
-if not os.path.exists('./figs/'):
-    os.makedirs('./figs/')
-    
 if not os.path.exists('./weights/'):
     os.makedirs('./weights/')
 
@@ -52,8 +49,6 @@ def func_psipp(x, par):
 def func_DDPIPI(x, par):
     ''' function for correlated breit wigner: e+e- --> DDpipi '''
     xx = x[0]
-    # return par[0] * TMath.Exp(par[1] * xx) + par[2]
-    # return par[0] * xx * xx * xx + par[2] * xx *xx + par[3] * xx + par[4]
     return par[0] * pow(xx, -2) * TMath.Exp(-1 * par[1] * (xx - 4.015))
 
 par_D1_2420 = array('d', [1.0, 0.1, 0.1, 1.0, 0, 0])
@@ -89,19 +84,19 @@ tfunc_DDPIPI = TF1('tfunc_DDPIPI', func_DDPIPI, 4.200, 4.800, len(par_DDPIPI))
 tfunc_list = [tfunc_D1_2420, tfunc_psipp, tfunc_DDPIPI]
 
 gaexs_list, geeff_list, func_list = fit_xs(old_xs_list, tfunc_list, par_list, par_range_list, cp.get('general', 'cut'), True)
-# for gaexs, geeff, xtitle, xs_ytitle, eff_ytitle, tfunc, i in zip(gaexs_list, geeff_list, xtitle_list, xs_ytitle_list, eff_ytitle_list, func_list, xrange(len(gaexs_list))):
-#     xs_mbc = TCanvas('xs_mbc_' + str(i), '', 700, 600)
-#     set_canvas_style(xs_mbc)
-#     xs_mbc.cd()
-#     set_graph_style(gaexs, xtitle, xs_ytitle)
-#     gaexs.Draw('ap')
-#     xs_mbc.SaveAs('./figs/xs_'+str(i)+'.pdf')
-#     eff_mbc = TCanvas('eff_mbc_' + str(i), '', 700, 600)
-#     set_canvas_style(eff_mbc)
-#     eff_mbc.cd()
-#     set_graph_style(geeff, xtitle, eff_ytitle)
-#     geeff.Draw('ap')
-#     eff_mbc.SaveAs('./figs/eff_'+str(i)+'.pdf')
+for gaexs, geeff, xtitle, xs_ytitle, eff_ytitle, tfunc, i in zip(gaexs_list, geeff_list, xtitle_list, xs_ytitle_list, eff_ytitle_list, func_list, xrange(len(gaexs_list))):
+    xs_mbc = TCanvas('xs_mbc_' + str(i), '', 700, 600)
+    set_canvas_style(xs_mbc)
+    xs_mbc.cd()
+    set_graph_style(gaexs, xtitle, xs_ytitle)
+    gaexs.Draw('ap')
+    xs_mbc.SaveAs('./figs/xs_'+str(i)+'.pdf')
+    eff_mbc = TCanvas('eff_mbc_' + str(i), '', 700, 600)
+    set_canvas_style(eff_mbc)
+    eff_mbc.cd()
+    set_graph_style(geeff, xtitle, eff_ytitle)
+    geeff.Draw('ap')
+    eff_mbc.SaveAs('./figs/eff_'+str(i)+'.pdf')
 
 update(old_xs_list, new_xs_list, ini_isr_list, func_list, root_path_list, truth_root_list, event_root_list, truth_tree, event_tree, cp.get('general', 'cut'), True)
  

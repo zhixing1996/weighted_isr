@@ -94,4 +94,3 @@ def set_frame_style(frame, xtitle, ytitle):
     frame.GetYaxis().SetLabelOffset(0.008)
     frame.GetYaxis().SetTitle(ytitle)
     frame.GetYaxis().CenterTitle()
-
