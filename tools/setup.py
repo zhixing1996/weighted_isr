@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
+__author__ = "Maoqiang JING <jingmq@ihep.ac.cn>, inspired by Lianjin WU <wulj@ihep.ac.cn>"
+__copyright__ = "Copyright (c) Maoqiang JING, Lianjin WU"
+__created__ = "[2020-11-06 Fri 23:18]"
+
 from sys import *
 from ROOT import *
 from math import *
