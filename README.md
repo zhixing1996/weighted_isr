@@ -1,5 +1,5 @@
 # Tookits for An Iterative Weighting Method to Apply the ISR Correction
-Maybe you have noticed that a new method for ISR iteration has been proposed by Liangliang Wang (llwang@ihep.ac.cn) and Wenyu Sun (sunwenyu@ihep.ac.cn) (theory introduction of this method could be found in doc/Introduction.pdf), recently. After the check doing by Tong Liu (liutong2016@ihep.ac.cn) (MC generation examples could be found in example/), this method has been proved to be correct and is very time saving. This repository provides a relative general package for user to use this method to do ISR iteration. The main codes are based on Lianjin Wu's codes (wulj@ihep.ac.cn), which is very appreciating. If you are not familiar with GitHub operation, you can copy the codes from /besfs/groups/cal/dedx/jingmq/bes/weighted_isr, if the storage patch changed, the newest path will be shown in here, also all the changes will be updated to repository in GitHub. 
+Maybe you have noticed that a new method for ISR iteration has been proposed by Liangliang Wang (llwang@ihep.ac.cn) and Wenyu Sun (sunwenyu@ihep.ac.cn) (theory introduction of this method could be found in doc/Introduction.pdf), recently. After the check doing by Tong Liu (liutong2016@ihep.ac.cn) (MC generation examples could be found in example/), this method has been proved to be correct and is very time saving. This repository provides a relative general package for user to use this method to do ISR iteration. The main codes are based on Lianjin Wu's codes (wulj@ihep.ac.cn), which is very appreciating. If you are not familiar with GitHub operation, you can copy the codes from /besfs/groups/cal/dedx/jingmq/bes/weighted_isr, if the storage patch changed, the newest path will be shown in here, also all the changes will be updated to this repository in GitHub. 
 
 ## Install
 
@@ -58,7 +58,7 @@ List input of [patch] -- label, [path] -- xs_old, and xs_new, and ini_isr, [draw
 
 ## Some Codes You Have to Change
 
-The aim of this repository is to provide a general package for users and the only thing user has to do is changing configure file (weight_isr.conf). However, due to the complexity of user defined functions in FIT_XS and plot styles of canvas or some thing else, it is very hard to provide a total general script. Therefore, the developer has to leave this space to users and the structure of this repository is based on python2. Fortunately, the thing user has to change is not very much and very easy to understand without very deep python knowledge.
+The aim of this repository is to provide a general package for users and the only thing user has to do is changing configure file (weight_isr.conf). However, due to the complexity of user defined functions in FIT_XS and plot styles of canvas or some thing else, it is very hard to provide a total general script. Therefore, the developer has to leave this space to users and bad news is the structure of this repository is based on python2. Fortunately, the thing user has to change is not very much and very easy to understand without very deep python knowledge.
 
 > In main.py: line 74 - 135, defination of fit functions for input cross sections;
 
