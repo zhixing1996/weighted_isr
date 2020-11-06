@@ -79,7 +79,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
                     h_psipp_rm_pipi.Fill(t_psipp.m_rm_pipi, t_psipp_w.m_weight)
                 xs_psipp = [xs for xs in xs_list if 'psipp' in xs][0]
                 if not len([xs for xs in xs_list if 'psipp' in xs]) == 1:
-                    print('WRONG: please check xs_new in weight_isr.conf')
+                    print('WRONG: please check xs_new in weighted_isr.conf')
                     exit(-1)
 
             if 'DDPIPI' in ipath:
@@ -105,7 +105,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
                     h_DDPIPI_rm_pipi.Fill(t_DDPIPI.m_rm_pipi, t_DDPIPI_w.m_weight)
                 xs_DDPIPI = [xs for xs in xs_list if 'DDPIPI' in xs][0]
                 if not len([xs for xs in xs_list if 'DDPIPI' in xs]) == 1:
-                    print('WRONG: please check xs_new in weight_isr.conf')
+                    print('WRONG: please check xs_new in weighted_isr.conf')
                     exit(-1)
 
             if 'D1_2420' in ipath:
@@ -131,7 +131,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
                     h_D1_2420_rm_pipi.Fill(t_D1_2420.m_rm_pipi, t_D1_2420_w.m_weight)
                 xs_D1_2420 = [xs for xs in xs_list if 'D1_2420' in xs][0]
                 if not len([xs for xs in xs_list if 'D1_2420' in xs]) == 1:
-                    print('WRONG: please check xs_new in weight_isr.conf')
+                    print('WRONG: please check xs_new in weighted_isr.conf')
                     exit(-1)
     except Exception as e:
         print str(e)
