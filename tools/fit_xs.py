@@ -23,9 +23,15 @@ def fit(xs_file, tfunc, is_fit = True):
             fargs = map(float, line.strip().split())
             sample, ecms, lum, br, nsig, nsigerrl, nsigerrh = fargs[0], fargs[1], fargs[2], fargs[3], fargs[4], fargs[5], fargs[6]
             eff, isr, vp, N0 = fargs[7],  fargs[8],  fargs[9], fargs[10]
+            '''
+            USER DEFINE SECTION { formula of cross section
+            '''
             xs = nsig/(2*lum*eff*br*isr*vp)
             xserrl = nsigerrl/(2*lum*eff*br*isr*vp)
             xserrh = nsigerrh/(2*lum*eff*br*isr*vp)
+            '''
+            } USER DEFINE SECTION
+            '''
             gaexs.Set(ipoint + 1)
             gaexs.SetPoint(ipoint, ecms, xs)
             gaexs.SetPointError(ipoint, 0.0, 0.0, xserrl, xserrh)

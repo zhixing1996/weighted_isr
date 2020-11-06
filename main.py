@@ -8,12 +8,16 @@ import tools.xs_func as xs_func
 set_pub_style()
 from tools.fit_xs import fit_xs
 from tools.update import update
+from tools.fill_xs import fill_xs
 from ROOT import TCanvas, TMath, TF1, TChain
 from math import *
 
 if not os.path.exists('./weights/'):
     os.makedirs('./weights/')
 
+'''
+Config file parser
+'''
 cp = ConfigParser.SafeConfigParser()
 cp.read('example.conf')
 label_list = cp.get('patch', 'label').strip('[').strip(']').replace(' ', '').split(',')
@@ -38,9 +42,13 @@ truth_root_list = cp.get('weight', 'truth_root').strip('[').strip(']').replace('
 event_root_list = cp.get('weight', 'event_root').strip('[').strip(']').replace(' ', '').split(',')
 truth_tree = cp.get('weight', 'truth_tree')
 event_tree = cp.get('weight', 'event_tree')
+
+'''
+USER DEFINE SECTION{ : fit functions for input cross sections
+'''
+# formula of fit functions
 xmin, xmax = 4.2, 4.8
 func = xs_func.xs_func(100, xmin, xmax)
-
 def func_D1_2420(x, par):
     ''' function for correlated breit wigner: e+e- --> D1D'''
     xx = x[0]
@@ -62,12 +70,12 @@ def func_DDPIPI(x, par):
     ''' function for correlated breit wigner: e+e- --> DDpipi '''
     xx = x[0]
     return par[0] * pow(xx, -2) * TMath.Exp(-1 * par[1] * (xx - 4.015))
-
+# initial parameters of fit functions
 par_D1_2420 = array('d', [1.0, 0.1, 0.1, 1.0, 0, 0])
 par_psipp = array('d', [1.0, 0.1, 0.1, 0.1, 1.0, .0, .0])
 par_DDPIPI = array('d', [1.0, 1.0])
 par_list = [par_D1_2420, par_psipp, par_DDPIPI]
-
+# parameters range of fit functions
 par_range_D1_2420 = [
     [0, -50.0, 50.0],
     [1, -50.0, 50.0],
@@ -86,38 +94,64 @@ par_range_psipp = [
 ]
 par_range_DDPIPI = [
     [0, -100.0, 100.0],
-    [1, -100.0, 100.0],
+    [1, -100.0, 100.0]
 ]
 par_range_list = [par_range_D1_2420, par_range_psipp, par_range_DDPIPI]
-
+# list of TF1 fit functions
 tfunc_D1_2420 = TF1('tfunc_D1_2420', func_D1_2420, xmin, xmax, len(par_D1_2420))
 tfunc_psipp = TF1('tfunc_psipp', func_psipp, xmin, xmax, len(par_psipp))
 tfunc_DDPIPI = TF1('tfunc_DDPIPI', func_DDPIPI, xmin, xmax, len(par_DDPIPI))
 tfunc_list = [tfunc_D1_2420, tfunc_psipp, tfunc_DDPIPI]
+'''
+} USER DEFINE SECTION
+'''
 
+'''
+fitting of input cross sections
+'''
 is_fit = True
-gaexs_list, geeff_list, func_list = fit_xs(old_xs_list, tfunc_list, par_list, par_range_list, is_fit)
-for label, gaexs, geeff, xtitle, xs_ytitle, eff_ytitle, tfunc in zip(label_list, gaexs_list, geeff_list, xtitle_list, xs_ytitle_list, eff_ytitle_list, func_list):
-    xs_mbc = TCanvas('xs_mbc_' + label + '_' + iter_old, '', 700, 600)
+gaexs_list_fit, geeff_list_fit, func_list = fit_xs(old_xs_list, tfunc_list, par_list, par_range_list, is_fit)
+for label, gaexs, geeff, xtitle, xs_ytitle, eff_ytitle in zip(label_list, gaexs_list_fit, geeff_list_fit, xtitle_list, xs_ytitle_list, eff_ytitle_list):
+    xs_mbc = TCanvas('xs_mbc_' + label + '_' + iter_old + '_fit', '', 700, 600)
     set_canvas_style(xs_mbc)
     xs_mbc.cd()
     set_graph_style(gaexs, xtitle, xs_ytitle)
     gaexs.Draw('ap')
-    xs_mbc.SaveAs('./figs/xs_' + label + '_' + iter_old + '.pdf')
-    eff_mbc = TCanvas('eff_mbc_' + label + '_' + iter_old, '', 700, 600)
+    xs_mbc.SaveAs('./figs/xs_' + label + '_' + iter_old + '_fit.pdf')
+    eff_mbc = TCanvas('eff_mbc_' + label + '_' + iter_old + '_fit', '', 700, 600)
     set_canvas_style(eff_mbc)
     eff_mbc.cd()
     set_graph_style(geeff, xtitle, eff_ytitle)
     geeff.Draw('ap')
-    eff_mbc.SaveAs('./figs/eff_' + label + '_' + iter_old + '.pdf')
-
-is_exit = raw_input('Do you want to continue? (Yes/No)')
-if is_exit == 'No':
+    eff_mbc.SaveAs('./figs/eff_' + label + '_' + iter_old + '_fit.pdf')
+is_continue = raw_input('Do you want to continue? (Yes/No)')
+if is_continue == 'No':
     exit(-1)
 else:
     print('you have enetred an unwanted string, now exiting...')
     exit(-1)
 
+'''
+update cross sections
+'''
 update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, func_list, root_path_list, truth_root_list, event_root_list, truth_tree, event_tree, shape_dep)
+
+'''
+draw updated cross sections
+'''
+gaexs_list, geeff_list = fill_xs(new_xs_list)
+for label, gaexs, geeff, xtitle, xs_ytitle, eff_ytitle in zip(label_list, gaexs_list, geeff_list, xtitle_list, xs_ytitle_list, eff_ytitle_list):
+    xs_mbc = TCanvas('xs_mbc_' + label + '_' + iter_new, '', 700, 600)
+    set_canvas_style(xs_mbc)
+    xs_mbc.cd()
+    set_graph_style(gaexs, xtitle, xs_ytitle)
+    gaexs.Draw('ap')
+    xs_mbc.SaveAs('./figs/xs_' + label + '_' + iter_new + '.pdf')
+    eff_mbc = TCanvas('eff_mbc_' + label + '_' + iter_new, '', 700, 600)
+    set_canvas_style(eff_mbc)
+    eff_mbc.cd()
+    set_graph_style(geeff, xtitle, eff_ytitle)
+    geeff.Draw('ap')
+    eff_mbc.SaveAs('./figs/eff_' + label + '_' + iter_new + '.pdf')
  
 raw_input('Press <Enter> to end...')
