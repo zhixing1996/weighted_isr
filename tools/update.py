@@ -13,13 +13,6 @@ from math import *
 from ROOT import TF1, TChain, TH1D, TFile, TTree
 import operator
 from array import array
-'''
-USER DEFINE SECTION { pyroot fit -------- Optional
-'''
-from simul_fit import simul_fit
-'''
-} USER DEFINE SECTION
-'''
 
 def cal_weight(sample, ecms, chain, tfunc, shape_dep = False, label = '', iter_new = '', sample_type = 'truth', cut = ''):
     ''' ARGUE: 1. input data sample
@@ -56,12 +49,6 @@ def cal_weight(sample, ecms, chain, tfunc, shape_dep = False, label = '', iter_n
         f_weight.Close()
         return wf, float(wsumtotal), float(sumtotal)
     else: return float(wsumtotal), float(sumtotal)
-    # if (sample_type == 'event' and shape_dep):
-    #     wf = './weights/weighted_' + label + '_' + str(int(sample)) + '_' + iter_new + '.root'
-    # wsumtotal, sumtotal = 1., 1.
-    # if (sample_type == 'event' and shape_dep):
-    #     return wf, float(wsumtotal), float(sumtotal)
-    # else: return float(wsumtotal), float(sumtotal)
 
 def weight(sample, ecms, chtruth, chevent, tfunc, shape_dep = False, label = '', iter_new = '', cut = ''):
     ''' ARGUE: 1. input data sample
@@ -130,7 +117,6 @@ def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_l
                         wf_list.append(wf)
                     else: wsumtru, wsumeff, sumtru, sumeff = weight(sample, ecms, chtruth, chevent, tfunc, shape_dep, label, iter_new, cut)
                     wisr = float(fisrs[1]) * wsumtru * pow(sumtru, -1)
-                    # wisr, wsumeff = 1., 1.
                     print('wisr:{:<10.5f}iniisr:{:<10.5f}'.format(wisr, float(fisrs[1])))
                     lines_out.append('{:<7.0f}{:<10.5f}{:<10.2f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.3f}{:<10.3f}{:<10.5f}{:<10.5f}{:<10.5f}\n'.format(sample, ecms, lum, br, nsig, nsigerrl, nsigerrh, wsumeff, wisr, vp, N0))
             except Exception as e:
@@ -142,6 +128,7 @@ def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_l
     USER DEFINE SECTION { pyroot fit -------- Optional
     '''
     if shape_dep and pyroot_fit:
+        from simul_fit import simul_fit
         wf_dic_temp = {}
         wf_dic = {}
         for wf in wf_list:
