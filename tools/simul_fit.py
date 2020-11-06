@@ -35,7 +35,13 @@ def update_texts(f_name, target, new):
     f_new.write(str_f)
     f_new.close()
 
-def simul_fit(sample, path, patch, xs_list):
+def simul_fit(sample, path, patch, xs_list, cut = ''):
+    xmin_rm_D, xmax_rm_D, temp = param_rm_D(sample)
+    xbins_rm_D = int((xmax_rm_D - xmin_rm_D)/0.005)
+    xmin_rm_Dmiss, xmax_rm_Dmiss, temp = param_rm_D(sample)
+    xbins_rm_Dmiss = int((xmax_rm_Dmiss - xmin_rm_Dmiss)/0.005)
+    xmin_rm_pipi, xmax_rm_pipi = param_rm_pipi(sample)
+    xbins_rm_pipi = int((xmax_rm_pipi - xmin_rm_pipi)/0.005)
     try:
         data_path = '/besfs/users/$USER/bes/DDPIPI/v0.2/data/'+str(sample)+'/data_'+str(sample)+'_after.root'
         f_data = TFile(data_path, 'READ')
@@ -51,41 +57,84 @@ def simul_fit(sample, path, patch, xs_list):
 
         for ipath in path:
             if 'psipp' in ipath:
-                shape_psipp_rm_D = TFile(ipath, 'READ')
-                shape_psipp_rm_Dmiss = TFile(ipath, 'READ')
-                shape_psipp_rm_pipi = TFile(ipath, 'READ')
-                h_psipp_rm_D = shape_psipp_rm_D.Get('h_rm_D_psipp_'+str(int(sample)))
-                h_psipp_rm_Dmiss = shape_psipp_rm_Dmiss.Get('h_rm_Dmiss_psipp_'+str(int(sample)))
-                h_psipp_rm_pipi = shape_psipp_rm_pipi.Get('h_rm_pipi_psipp_'+str(int(sample)))
+                psipp_path = '/besfs/users/$USER/bes/DDPIPI/v0.2/sigMC/psipp/'+str(sample)+'/sigMC_psipp_'+str(sample)+'_after.root'
+                f_psipp = TFile(psipp_path, 'READ')
+                t_psipp = f_psipp.Get('save')
+                f_psipp_w = TFile(ipath, 'READ')
+                t_psipp_w = f_psipp_w.Get('weight')
+                entries_psipp = t_psipp.GetEntries()
+                entries_psipp_w = t_psipp_w.GetEntries()
+                if entries_psipp == entries_psipp_w: logging.info('psipp('+str(sample)+') entries :'+str(entries_psipp))
+                else:
+                    print('WRONG: entries_psipp and entries_psipp_w are not equal, please check cut')
+                    exit(-1)
+                h_psipp_rm_D = TH1D('h_rm_D_psipp', 'h_rm_D_psipp', xbins_rm_D, xmin_rm_D, xmax_rm_D)
+                h_psipp_rm_Dmiss = TH1D('h_rm_Dmiss_psipp', 'h_rm_Dmiss_psipp', xbins_rm_Dmiss, xmin_rm_Dmiss, xmax_rm_Dmiss)
+                h_psipp_rm_pipi = TH1D('h_rm_pipi_psipp', 'h_rm_pipi_psipp', xbins_rm_pipi, xmin_rm_pipi, xmax_rm_pipi)
+                for ientry in xrange(int(t_psipp.GetEntries())):
+                    t_psipp.GetEntry(ientry)
+                    t_psipp_w.GetEntry(ientry)
+                    h_psipp_rm_D.Fill(t_psipp.m_rm_D, t_psipp_w.m_weight)
+                    h_psipp_rm_Dmiss.Fill(t_psipp.m_rm_Dmiss, t_psipp_w.m_weight)
+                    h_psipp_rm_pipi.Fill(t_psipp.m_rm_pipi, t_psipp_w.m_weight)
                 xs_psipp = [xs for xs in xs_list if 'psipp' in xs][0]
                 if not len([xs for xs in xs_list if 'psipp' in xs]) == 1:
                     print('WRONG: please check xs_new in example.conf')
                     exit(-1)
 
             if 'DDPIPI' in ipath:
-                shape_DDPIPI_rm_D = TFile(ipath, 'READ')
-                shape_DDPIPI_rm_Dmiss = TFile(ipath, 'READ')
-                shape_DDPIPI_rm_pipi = TFile(ipath, 'READ')
-                h_DDPIPI_rm_D = shape_DDPIPI_rm_D.Get('h_rm_D_DDPIPI_'+str(int(sample)))
-                h_DDPIPI_rm_Dmiss = shape_DDPIPI_rm_Dmiss.Get('h_rm_Dmiss_DDPIPI_'+str(int(sample)))
-                h_DDPIPI_rm_pipi = shape_DDPIPI_rm_pipi.Get('h_rm_pipi_DDPIPI_'+str(int(sample)))
+                DDPIPI_path = '/besfs/users/$USER/bes/DDPIPI/v0.2/sigMC/DDPIPI/'+str(sample)+'/sigMC_D_D_PI_PI_'+str(sample)+'_after.root'
+                f_DDPIPI = TFile(DDPIPI_path, 'READ')
+                t_DDPIPI = f_DDPIPI.Get('save')
+                f_DDPIPI_w = TFile(ipath, 'READ')
+                t_DDPIPI_w = f_DDPIPI_w.Get('weight')
+                entries_DDPIPI = t_DDPIPI.GetEntries()
+                entries_DDPIPI_w = t_DDPIPI_w.GetEntries()
+                if entries_DDPIPI == entries_DDPIPI_w: logging.info('DDPIPI('+str(sample)+') entries :'+str(entries_DDPIPI))
+                else:
+                    print('WRONG: entries_DDPIPI and entries_DDPIPI_w are not equal, please check cut')
+                    exit(-1)
+                h_DDPIPI_rm_D = TH1D('h_rm_D_DDPIPI', 'h_rm_D_DDPIPI', xbins_rm_D, xmin_rm_D, xmax_rm_D)
+                h_DDPIPI_rm_Dmiss = TH1D('h_rm_Dmiss_DDPIPI', 'h_rm_Dmiss_DDPIPI', xbins_rm_Dmiss, xmin_rm_Dmiss, xmax_rm_Dmiss)
+                h_DDPIPI_rm_pipi = TH1D('h_rm_pipi_DDPIPI', 'h_rm_pipi_DDPIPI', xbins_rm_pipi, xmin_rm_pipi, xmax_rm_pipi)
+                for ientry in xrange(int(t_DDPIPI.GetEntries())):
+                    t_DDPIPI.GetEntry(ientry)
+                    t_DDPIPI_w.GetEntry(ientry)
+                    h_DDPIPI_rm_D.Fill(t_DDPIPI.m_rm_D, t_DDPIPI_w.m_weight)
+                    h_DDPIPI_rm_Dmiss.Fill(t_DDPIPI.m_rm_Dmiss, t_DDPIPI_w.m_weight)
+                    h_DDPIPI_rm_pipi.Fill(t_DDPIPI.m_rm_pipi, t_DDPIPI_w.m_weight)
                 xs_DDPIPI = [xs for xs in xs_list if 'DDPIPI' in xs][0]
                 if not len([xs for xs in xs_list if 'DDPIPI' in xs]) == 1:
                     print('WRONG: please check xs_new in example.conf')
                     exit(-1)
 
             if 'D1_2420' in ipath:
-                shape_D1_2420_rm_D = TFile(ipath, 'READ')
-                shape_D1_2420_rm_Dmiss = TFile(ipath, 'READ')
-                shape_D1_2420_rm_pipi = TFile(ipath, 'READ')
-                h_D1_2420_rm_D = shape_D1_2420_rm_D.Get('h_rm_D_D1_2420_'+str(int(sample)))
-                h_D1_2420_rm_Dmiss = shape_D1_2420_rm_Dmiss.Get('h_rm_Dmiss_D1_2420_'+str(int(sample)))
-                h_D1_2420_rm_pipi = shape_D1_2420_rm_pipi.Get('h_rm_pipi_D1_2420_'+str(int(sample)))
+                D1_2420_path = '/besfs/users/$USER/bes/DDPIPI/v0.2/sigMC/D1_2420/'+str(sample)+'/sigMC_D1_2420_'+str(sample)+'_after.root'
+                f_D1_2420 = TFile(D1_2420_path, 'READ')
+                t_D1_2420 = f_D1_2420.Get('save')
+                f_D1_2420_w = TFile(ipath, 'READ')
+                t_D1_2420_w = f_D1_2420_w.Get('weight')
+                entries_D1_2420 = t_D1_2420.GetEntries()
+                entries_D1_2420_w = t_D1_2420_w.GetEntries()
+                if entries_D1_2420 == entries_D1_2420_w: logging.info('D1_2420('+str(sample)+') entries :'+str(entries_D1_2420))
+                else:
+                    print('WRONG: entries_D1_2420 and entries_D1_2420_w are not equal, please check cut')
+                    exit(-1)
+                h_D1_2420_rm_D = TH1D('h_rm_D_D1_2420', 'h_rm_D_D1_2420', xbins_rm_D, xmin_rm_D, xmax_rm_D)
+                h_D1_2420_rm_Dmiss = TH1D('h_rm_Dmiss_D1_2420', 'h_rm_Dmiss_D1_2420', xbins_rm_Dmiss, xmin_rm_Dmiss, xmax_rm_Dmiss)
+                h_D1_2420_rm_pipi = TH1D('h_rm_pipi_D1_2420', 'h_rm_pipi_D1_2420', xbins_rm_pipi, xmin_rm_pipi, xmax_rm_pipi)
+                for ientry in xrange(int(t_D1_2420.GetEntries())):
+                    t_D1_2420.GetEntry(ientry)
+                    t_D1_2420_w.GetEntry(ientry)
+                    h_D1_2420_rm_D.Fill(t_D1_2420.m_rm_D, t_D1_2420_w.m_weight)
+                    h_D1_2420_rm_Dmiss.Fill(t_D1_2420.m_rm_Dmiss, t_D1_2420_w.m_weight)
+                    h_D1_2420_rm_pipi.Fill(t_D1_2420.m_rm_pipi, t_D1_2420_w.m_weight)
                 xs_D1_2420 = [xs for xs in xs_list if 'D1_2420' in xs][0]
                 if not len([xs for xs in xs_list if 'D1_2420' in xs]) == 1:
                     print('WRONG: please check xs_new in example.conf')
                     exit(-1)
     except Exception as e:
+        print str(e)
         logging.error('Files are invalid!')
         sys.exit()
     
@@ -97,8 +146,6 @@ def simul_fit(sample, path, patch, xs_list):
     nDDPIPI = RooRealVar('nDDPIPI', 'nDDPIPI', 0, N_DDPIPI)
 
     # model for RM(D)
-    xmin_rm_D, xmax_rm_D, temp = param_rm_D(sample)
-    xbins_rm_D = int((xmax_rm_D - xmin_rm_D)/0.005)
     rm_D = RooRealVar('rm_D', 'rm_D', xmin_rm_D, xmax_rm_D)
     rm_D.setRange('signal', xmin_rm_D, xmax_rm_D)
     h_sideband_rm_D = TH1F('h_sideband_rm_D', '', xbins_rm_D, xmin_rm_D, xmax_rm_D)
@@ -116,8 +163,6 @@ def simul_fit(sample, path, patch, xs_list):
     pdf_DDPIPI_rm_D = RooHistPdf('pdf_DDPIPI_rm_D', 'pdf_DDPIPI_rm_D', RooArgSet(rm_D), hist_DDPIPI_rm_D, 2)
 
     # model for RM(Dmiss)
-    xmin_rm_Dmiss, xmax_rm_Dmiss, temp = param_rm_D(sample)
-    xbins_rm_Dmiss = int((xmax_rm_Dmiss - xmin_rm_Dmiss)/0.005)
     rm_Dmiss = RooRealVar('rm_Dmiss', 'rm_Dmiss', xmin_rm_Dmiss, xmax_rm_Dmiss)
     rm_Dmiss.setRange('signal', xmin_rm_Dmiss, xmax_rm_Dmiss)
     h_sideband_rm_Dmiss = TH1F('h_sideband_rm_Dmiss', '', xbins_rm_Dmiss, xmin_rm_Dmiss, xmax_rm_Dmiss)
@@ -135,8 +180,6 @@ def simul_fit(sample, path, patch, xs_list):
     pdf_DDPIPI_rm_Dmiss = RooHistPdf('pdf_DDPIPI_rm_Dmiss', 'pdf_DDPIPI_rm_Dmiss', RooArgSet(rm_Dmiss), hist_DDPIPI_rm_Dmiss, 2)
 
     # model for RM(pipi)
-    xmin_rm_pipi, xmax_rm_pipi = param_rm_pipi(sample)
-    xbins_rm_pipi = int((xmax_rm_pipi - xmin_rm_pipi)/0.005)
     rm_pipi = RooRealVar('rm_pipi', 'rm_pipi', xmin_rm_pipi, xmax_rm_pipi)
     rm_pipi.setRange('signal', xmin_rm_pipi, xmax_rm_pipi)
     h_sideband_rm_pipi = TH1F('h_sideband_rm_pipi', '', xbins_rm_pipi, xmin_rm_pipi, xmax_rm_pipi)

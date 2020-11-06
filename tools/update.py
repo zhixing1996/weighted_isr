@@ -12,7 +12,14 @@ import logging
 from math import *
 from ROOT import TF1, TChain, TH1D, TFile, TTree
 import operator
+from array import array
+'''
+USER DEFINE SECTION { pyroot fit -------- Optional
+'''
 from simul_fit import simul_fit
+'''
+} USER DEFINE SECTION
+'''
 
 def cal_weight(sample, ecms, chain, tfunc, shape_dep = False, label = '', iter_new = '', sample_type = 'truth', cut = ''):
     ''' ARGUE: 1. input data sample
@@ -28,9 +35,9 @@ def cal_weight(sample, ecms, chain, tfunc, shape_dep = False, label = '', iter_n
     if (sample_type == 'event' and shape_dep):
         wf = './weights/weighted_' + label + '_' + str(int(sample)) + '_' + iter_new + '.root'
         f_weight = TFile(wf, 'RECREATE')
-        h_rm_D_w = TH1D('h_rm_D_'+label+'_'+str(int(sample)), 'h_rm_D_'+label+'_'+str(int(sample)), 200, 2.1, 2.9)
-        h_rm_Dmiss_w = TH1D('h_rm_Dmiss_'+label+'_'+str(int(sample)), 'h_rm_Dmiss_'+label+'_'+str(int(sample)), 200, 2.1, 2.9)
-        h_rm_pipi_w = TH1D('h_rm_pipi_'+label+'_'+str(int(sample)), 'h_rm_pipi_'+label+'_'+str(int(sample)), 200, 3.7, 4.4)
+        t_weight = TTree('weight', 'weight')
+        m_weight = array('d', [0])
+        t_weight.Branch('m_weight', m_weight, 'm_weightl/D')
     wsumtotal, sumtotal = 0., 0.
     tree = chain.CopyTree(cut)
     for evt in tree:
@@ -38,18 +45,23 @@ def cal_weight(sample, ecms, chain, tfunc, shape_dep = False, label = '', iter_n
         wecms = float(tfunc.Eval(ecms))
         w = winvm / wecms
         if (sample_type == 'event' and shape_dep):
-            h_rm_D_w.Fill(evt.m_rm_D, w)
-            h_rm_Dmiss_w.Fill(evt.m_rm_Dmiss, w)
-            h_rm_pipi_w.Fill(evt.m_rm_pipi, w)
+            m_weight[0] = w
+            t_weight.Fill()
         if not wecms == 0:
             wsumtotal += w
         sumtotal += 1
     if (sample_type == 'event' and shape_dep):
-        h_rm_D_w.Write()
-        h_rm_Dmiss_w.Write()
-        h_rm_pipi_w.Write()
+        f_weight.cd()
+        t_weight.Write()
+        f_weight.Close()
         return wf, float(wsumtotal), float(sumtotal)
     else: return float(wsumtotal), float(sumtotal)
+    # if (sample_type == 'event' and shape_dep):
+    #     wf = './weights/weighted_' + label + '_' + str(int(sample)) + '_' + iter_new + '.root'
+    # wsumtotal, sumtotal = 1., 1.
+    # if (sample_type == 'event' and shape_dep):
+    #     return wf, float(wsumtotal), float(sumtotal)
+    # else: return float(wsumtotal), float(sumtotal)
 
 def weight(sample, ecms, chtruth, chevent, tfunc, shape_dep = False, label = '', iter_new = '', cut = ''):
     ''' ARGUE: 1. input data sample
@@ -118,6 +130,7 @@ def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_l
                         wf_list.append(wf)
                     else: wsumtru, wsumeff, sumtru, sumeff = weight(sample, ecms, chtruth, chevent, tfunc, shape_dep, label, iter_new, cut)
                     wisr = float(fisrs[1]) * wsumtru * pow(sumtru, -1)
+                    # wisr, wsumeff = 1., 1.
                     print('wisr:{:<10.5f}iniisr:{:<10.5f}'.format(wisr, float(fisrs[1])))
                     lines_out.append('{:<7.0f}{:<10.5f}{:<10.2f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.3f}{:<10.3f}{:<10.5f}{:<10.5f}{:<10.5f}\n'.format(sample, ecms, lum, br, nsig, nsigerrl, nsigerrh, wsumeff, wisr, vp, N0))
             except Exception as e:
@@ -142,7 +155,7 @@ def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_l
             wf_dic[v1] = path
         wf_sourted = sorted(wf_dic.items(), key = operator.itemgetter(0))
         for WF in wf_sourted:
-            simul_fit(int(WF[0]), WF[1], iter_new, new_xs_list)
+            simul_fit(int(WF[0]), WF[1], iter_new, new_xs_list, cut)
     '''
     } USER DEFINE SECTION
     '''

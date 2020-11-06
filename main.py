@@ -22,7 +22,7 @@ if not os.path.exists('./txts/'):
 Config file parser
 '''
 cp = ConfigParser.SafeConfigParser()
-cp.read('example.conf')
+cp.read('weight_isr.conf')
 label_list = cp.get('patch', 'label').strip('[').strip(']').replace(' ', '').split(',')
 iter_old = cp.get('patch', 'iter_old')
 iter_new = cp.get('patch', 'iter_new')
