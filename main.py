@@ -20,6 +20,9 @@ from tools.fill_xs import fill_xs
 from ROOT import TCanvas, TMath, TF1, TChain
 from math import *
 
+if not os.path.exists('./figs/'):
+    os.makedirs('./figs/')
+
 if not os.path.exists('./weights/'):
     os.makedirs('./weights/')
 
