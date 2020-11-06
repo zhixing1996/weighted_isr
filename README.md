@@ -21,7 +21,7 @@ Python Version: 2.7.3, should not be python3.x
 
 ## Structure of this Repository
 
-> weight_isr.conf: configure file, user changes will mostly happen in here
+> weight_isr.conf: configure file, user's changes will mostly happen in here.
 
 1. [patch]: patch info, mainly used to create plots name and files name. 
     1. label: a very simple description of the cross sections you put;
@@ -43,15 +43,26 @@ Python Version: 2.7.3, should not be python3.x
     2. root_path: root path of INI root files;
     3. event_root: name of root files after selection, should be put in the path under root_path;
     4. truth_root: name of root files containing MC truth info, should be put in the path under root_path;
-    5. event_tree: tree name of [3]
-    6. truth_tree: tree name of [4]
+    5. event_tree: tree name of [3], M(truth) branch name in tree must be m_m_truthall;
+    6. truth_tree: tree name of [4], M(truth) branch name in tree must be m_m_truthall;
     7. cit_weight: some extra cut, not recommend to add in the this package, better to apply all the cuts before executing the program;
-    8. pyroot_fit: True/true or False/false, only if shape_dep is set to be True/true, this part will be useful: using dedicated pyROOT Roofit program (tools/simul_fit.py) in this package to do FIT_EVT, this is a recommended way to do iteration since it will be very automatically, however, this will also put a pretty strict requirement of user's pyROOT knowledge, user can alse dismiss this function by setting this part to be False/false with manual_update to be False(false), and then update out put files (relative nsignal info) output in xs_new, and then execute 'python main.py' again, especially, if you want to use pyROOT Roofit program, this part must be set to be False/false;
-    9. manual_update: manually update output results in xs_new (relative nsignal info)
+    8. pyroot_fit: True/true or False/false, only if shape_dep is set to be True/true, this part will be useful: using dedicated pyROOT Roofit program (tools/simul_fit.py) in this package to do FIT_EVT, this is a recommended way to do iteration since it will be very automatically, however, this will also put a pretty strict requirement of user's pyROOT knowledge, user can alse dismiss this function by setting this part to be False/false with manual_update to be False(false), and then update out put files (relative nsignal info) in xs_new, and then execute 'python main.py' again, especially, if you want to use pyROOT Roofit program, this part must be set to be False/false;
+    9. manual_update: whether user has updated output results in xs_new (relative nsignal info) manually or not.
 
 4. [WIP]: Working in progress, any recommends will be welcomed sincerely!
 
-## How to use
+List input of [patch] -- label, [path] -- xs_old, xs_new, and ini_isr, [draw] -- xtitle, xs_ytitle, and eff_ytitle, and [weight] -- root_path, event_root, truth_root is supported in case the number of components in your FIT_EVT is larger than one, but you have to pay attention to the order of your input.
+
+> main.py: main program of this package.
+
+> tools: program used in main.py, especially, tools/simul_fit_cal.py is used for calibration of FIT_EVT, and params.py stores the parameters used in FIT_EVT, if you have set pyroot_fit to be false, tools/simul_fit.py, tools/simul_fit_cal.py, and params.py will not be useful.
+
+> log: input and out put cross sections info (without the value of cross sections, will be provided in another directory)
+
+    1. The format of the input cross sections info could be seen in the cloned repository;
+    2. Commenting is supported from line 2 of files in log/ by using '#' in the head of the line, but no black space is allowed between '#' and the head of line, if '#' is added, when doing cross section fitting (referred as FIT_XS) corresponding data sample will not be used, this is very useful if there is some data sample which has very low statistics level existing in your FIT_XS.
+
+## Some Codes You Have to Change
 
 The aim of this repository is to provide a general package for users and the only thing users have to do is changing configure file (weight_isr.conf). However, due to the complexity of user defined function and plot style of canvas or pad, it is very hard to provide a general script. Therefore, the developer have to leave this space to users and the structure of this repository is based on python2. Fortunately, the things user has to change is not very much and easier to understand without much python knowledge.
 
@@ -62,3 +73,34 @@ The aim of this repository is to provide a general package for users and the onl
 > In tools/update.py: line 127 - 148, import module of user defined fit function (to get number of events, if the calculation of cross section is mc shape dependent) and usage of it, this section could be dismissed by setting [weight]: shape_dep = False and update the number of events manually and continue your work by setting [weight]: manual_update = False before updating and then True after updating;
 
 > In tools/fill_xs.py: line 30 - 38, defination of cross section formula.
+
+## Output When Executing
+
+> figs: directory, created automatically by main.py, stores output figures when doing FIT_XS(fitting results of cross sections and isr times efficiency) and doing FIT_EVT(if you like) (created by main.py);
+
+> log: directory, cloned from GitHub, stores updated cross sections info (created by tools/update.py);
+
+> txts: directoy, created automatically by main.py, stores cross sections info (containing the values of cross sections, created by tools/fill_xs.py);
+
+> weights: directory, created automatically by main.py, stores root files containing calculated events weights used in FIT_EVT (scaling MC shape).
+
+## For developers 
+ 
+- Fork the code with your personal github ID. See [details](https://help.github.com/articles/fork-a-repo/)
+ 
+> git clone https://github.com/zhixing1996/DDPIPI.git
+ 
+- Make your change, commit and push
+ 
+> git commit -a -m "Added feature A, B, C"
+ 
+> git push
+ 
+- Make a pull request. See [details](https://help.github.com/articles/using-pull-requests/)
+ 
+## Some styles to follow 
+- Minimize the number of main c++ files
+- Keep functions length less than one screen
+- Seperate hard-coded cuts into script file                                                                                                                                                              
+- Use pull-request mode on git 
+- Document well the high-level bash file for work flow 
