@@ -54,7 +54,7 @@ def fit_xs(xs_list, tfunc_list, par_list, par_range_list, is_fit = True):
                5. is fit or not
     '''
     if not len(tfunc_list) == len(xs_list) == len(par_list) == len(par_range_list):
-        print 'WRONG: please add necessary info in example.conf or main.py (array size of tfunc_list, xs_list, par_list and par_range_list should be the same)!'
+        print 'WRONG: please add necessary info in weight_isr.conf or main.py (array size of tfunc_list, xs_list, par_list and par_range_list should be the same)!'
         exit(-1)
     gaexs_list, geeff_list, func_list = [], [], []
     for xs, tfunc, par, par_range in zip(xs_list, tfunc_list, par_list, par_range_list):

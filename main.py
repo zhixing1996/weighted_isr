@@ -46,7 +46,7 @@ if shape_dep_str == 'True' or shape_dep_str == 'true':
 elif shape_dep_str == 'False' or shape_dep_str == 'false':
     shape_dep = False
 else:
-    print("WRONG: shape_dep in example.conf must be 'True'/'true' or 'False'/'false', now is " + cp.get('weight', 'shape_dep'))
+    print("WRONG: shape_dep in weight_isr.conf must be 'True'/'true' or 'False'/'false', now is " + cp.get('weight', 'shape_dep'))
     exit(-1)
 root_path_list = cp.get('weight', 'root_path').strip('[').strip(']').replace(' ', '').split(',')
 truth_root_list = cp.get('weight', 'truth_root').strip('[').strip(']').replace(' ', '').split(',')
@@ -58,7 +58,7 @@ if pyroot_fit_str == 'True' or pyroot_fit_str == 'true':
 elif pyroot_fit_str == 'False' or pyroot_fit_str == 'false':
     pyroot_fit = False
 else:
-    print("WRONG: pyroot_fit in example.conf must be 'True'/'true' or 'False'/'false', now is " + cp.get('weight', 'pyroot_fit'))
+    print("WRONG: pyroot_fit in weight_isr.conf must be 'True'/'true' or 'False'/'false', now is " + cp.get('weight', 'pyroot_fit'))
     exit(-1)
 manual_update_str = cp.get('weight', 'manual_update')
 if manual_update_str == 'True' or manual_update_str == 'true':
@@ -66,7 +66,7 @@ if manual_update_str == 'True' or manual_update_str == 'true':
 elif manual_update_str == 'False' or manual_update_str == 'false':
     manual_update = False
 else:
-    print("WRONG: manual_update in example.conf must be 'True'/'true' or 'False'/'false', now is " + cp.get('weight', 'manual_update'))
+    print("WRONG: manual_update in weight_isr.conf must be 'True'/'true' or 'False'/'false', now is " + cp.get('weight', 'manual_update'))
     exit(-1)
 truth_tree = cp.get('weight', 'truth_tree')
 event_tree = cp.get('weight', 'event_tree')
@@ -167,7 +167,7 @@ update cross sections
 if not manual_update:
     update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, func_list, root_path_list, truth_root_list, event_root_list, truth_tree, event_tree, shape_dep, cut_weight, pyroot_fit)
 if not ((shape_dep and not pyroot_fit and manual_update) or (shape_dep and pyroot_fit) or (not shape_dep)):
-    print("INFO: please update new xs files manually and continue, after updating, please set manual_update in example.conf to be 'True' or 'true'")
+    print("INFO: please update new xs files manually and continue, after updating, please set manual_update in weight_isr.conf to be 'True' or 'true'")
     exit(-1)
 
 '''
