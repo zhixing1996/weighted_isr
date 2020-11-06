@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+"""
+main file of weighted_isr package
+"""
+
+__author__ = "Maoqiang JING <jingmq@ihep.ac.cn>, inspired by Lianjin Wu <wulj@ihep.ac.cn>"
+__copyright__ = "Copyright (c) Maoqiang JING, Lianjin WU"
+__created__ = "[2020-11-06 Fri 23:18]"
+
 import ConfigParser
 import sys, os
 from array import array

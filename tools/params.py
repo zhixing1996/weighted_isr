@@ -2,11 +2,6 @@
 """
 Common params 
 """
-
-__author__ = "Maoqiang JING <jingmq@ihep.ac.cn>"
-__copyright__ = "Copyright (c) Maoqiang JING"
-__created__ = "[2019-08-13 Tue 15:05]" 
-
 import sys 
 import os, errno
 import shutil

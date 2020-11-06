@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Simultaneous fit of recoiling mass of D and Dmiss and recoiling mass of tagged piplus and piminus
+Calibration of simultaneous fit of recoiling mass of D and Dmiss and recoiling mass of tagged piplus and piminus
 """
 
 __author__ = "Maoqiang JING <jingmq@ihep.ac.cn>"

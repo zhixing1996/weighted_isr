@@ -3,9 +3,9 @@
 Fit cross section
 """
 
-__author__ = "Maoqiang JING <jingmq@ihep.ac.cn>"
-__copyright__ = "Copyright (c) Maoqiang JING"
-__created__ = "[2020-01-04 Sat 15:08]"
+__author__ = "Maoqiang JING <jingmq@ihep.ac.cn>, inspired by Lianjin WU <wulj@ihep.ac.cn>"
+__copyright__ = "Copyright (c) Maoqiang JING, Lianjin WU"
+__created__ = "[2020-11-06 Fri 23:18]"
 
 import sys, os
 import logging
