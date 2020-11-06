@@ -43,7 +43,7 @@ Python Version: 2.7.3, should not be python3.x
     8. pyroot_fit: True/true or False/false, only if shape_dep is set to be True/true, this part will be useful: using dedicated pyROOT Roofit program (tools/simul_fit.py) in this package to do FIT_EVT, this is a recommended way to do iteration since it will be very automatically, however, this will also put a pretty strict requirement of user's pyROOT knowledge, user can also dismiss this function by setting this part to be False/false with manual_update to be False(false), and then update out put files (relative nsignal info) in xs_new, and then execute 'python main.py' again, especially, if you want to use pyROOT Roofit program, this part must be set to be False/false;
     9. manual_update: whether user has updated output results in xs_new (relative nsignal info) manually or not.
 
-4. [WIP]: Working in progress, any recommends will be welcomed sincerely! Some functions of this repository haven't been tested by explicit analysis, if you would like to use this repository, please be sure to share your feelings and errors encountered!
+4. [WIP]: Working in progress, any recommends will be welcomed sincerely! Some functions of this repository haven't been tested by explicit analysis, if you would like to use this repository, please be sure to share your feelings and errors encountered (jingmq@ihep.ac.cn)!
 
 List input of [patch] -- label, [path] -- xs_old, and xs_new, and ini_isr, [draw] -- xtitle, xs_ytitle, and eff_ytitle, and [weight] -- root_path, event_root, and truth_root is supported in case the number of components in your FIT_EVT is larger than one, but you have to pay attention to the order of your input.
 
