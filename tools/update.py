@@ -14,7 +14,7 @@ from ROOT import TF1, TChain, TH1D, TFile, TTree
 import operator
 from simul_fit import simul_fit
 
-def calc_weight(sample, ecms, chain, tfunc, shape_dep = False, label = '', iter_new = '', sample_type = 'truth', cut = ''):
+def cal_weight(sample, ecms, chain, tfunc, shape_dep = False, label = '', iter_new = '', sample_type = 'truth', cut = ''):
     ''' ARGUE: 1. input data sample
                2. input data ecms
                3. input TChain/TTree
@@ -63,19 +63,19 @@ def weight(sample, ecms, chtruth, chevent, tfunc, shape_dep = False, label = '',
                9. cut
     '''
     if shape_dep:
-        wsumtru, sumtru = calc_weight(sample, ecms, chtruth, tfunc)
-        wf, wsumsig, sumsig = calc_weight(sample, ecms, chevent, tfunc, shape_dep, label, iter_new, 'event')
+        wsumtru, sumtru = cal_weight(sample, ecms, chtruth, tfunc, shape_dep, label, iter_new, 'truth', '')
+        wf, wsumsig, sumsig = cal_weight(sample, ecms, chevent, tfunc, shape_dep, label, iter_new, 'event', cut)
         weff, eff = wsumsig/wsumtru, sumsig/sumtru
         print('wntru:{:<10.2f}wnsig:{:<10.2f}weff:{:<10.5f} --   ntru:{:<10.2f}nsig:{:<10.2f}eff:{:<10.5f}'.format(wsumtru, wsumsig, weff, sumtru, sumsig, eff))
         return wf, wsumtru, weff, sumtru, eff
     else:
-        wsumtru, sumtru = calc_weight(sample, ecms, chtruth, tfunc)
-        wsumsig, sumsig = calc_weight(sample, ecms, chevent, tfunc)
+        wsumtru, sumtru = cal_weight(sample, ecms, chtruth, tfunc, shape_dep, label, iter_new, 'truth', '')
+        wsumsig, sumsig = cal_weight(sample, ecms, chevent, tfunc, shape_dep, label, iter_new, 'event', cut)
         weff, eff = wsumsig/wsumtru, sumsig/sumtru
         print('wntru:{:<10.2f}wnsig:{:<10.2f}weff:{:<10.5f} --   ntru:{:<10.2f}nsig:{:<10.2f}eff:{:<10.5f}'.format(wsumtru, wsumsig, weff, sumtru, sumsig, eff))
         return wsumtru, weff, sumtru, eff
 
-def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_list, root_path_list, truth_root_list, event_root_list, truth_tree, event_tree, shape_dep = False, cut = ''):
+def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_list, root_path_list, truth_root_list, event_root_list, truth_tree, event_tree, shape_dep = False, cut = '', pyroot_fit = False):
     ''' ARGUE: 1. label list
                2. new iteration tag
                3. old data source file path and name
@@ -89,6 +89,7 @@ def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_l
                11. tree name of evnets after selecting
                12. whether mc shape dependent or not
                13. cut
+               14. using dedicted pyroot fit or not
     '''
     if not len(label_list) == len(old_xs_list) == len(new_xs_list) == len(ini_isr_list) == len(tfunc_list) == len(root_path_list) == len(truth_root_list) == len(event_root_list):
         print('WRONG: array size of label_list, old_xs, new_xs, ini_isr, tfunc, root_path, truth_path, truth_root and event_root should be the same')
@@ -113,9 +114,9 @@ def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_l
                     chevent.Add(eventroot)
                     print('executing {0} -- {1} -- {2}'.format(label, iter_new, str(int(sample))))
                     if shape_dep:
-                        wf, wsumtru, wsumeff, sumtru, sumeff = weight(sample, ecms, chtruth, chevent, tfunc, shape_dep, label, iter_new)
+                        wf, wsumtru, wsumeff, sumtru, sumeff = weight(sample, ecms, chtruth, chevent, tfunc, shape_dep, label, iter_new, cut)
                         wf_list.append(wf)
-                    else: wsumtru, wsumeff, sumtru, sumeff = weight(sample, ecms, chtruth, chevent, tfunc, shape_dep, label, iter_new)
+                    else: wsumtru, wsumeff, sumtru, sumeff = weight(sample, ecms, chtruth, chevent, tfunc, shape_dep, label, iter_new, cut)
                     wisr = float(fisrs[1]) * wsumtru * pow(sumtru, -1)
                     print('wisr:{:<10.5f}iniisr:{:<10.5f}'.format(wisr, float(fisrs[1])))
                     lines_out.append('{:<7.0f}{:<10.5f}{:<10.2f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.3f}{:<10.3f}{:<10.5f}{:<10.5f}{:<10.5f}\n'.format(sample, ecms, lum, br, nsig, nsigerrl, nsigerrh, wsumeff, wisr, vp, N0))
@@ -124,7 +125,10 @@ def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_l
         with open(new_xs, 'w') as f:
             for line_out in lines_out:
                 f.write(line_out)
-    if shape_dep:
+    '''
+    USER DEFINE SECTION { pyroot fit -------- Optional
+    '''
+    if shape_dep and pyroot_fit:
         wf_dic_temp = {}
         wf_dic = {}
         for wf in wf_list:
@@ -139,3 +143,6 @@ def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_l
         wf_sourted = sorted(wf_dic.items(), key = operator.itemgetter(0))
         for WF in wf_sourted:
             simul_fit(int(WF[0]), WF[1], iter_new, new_xs_list)
+    '''
+    } USER DEFINE SECTION
+    '''

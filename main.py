@@ -15,6 +15,9 @@ from math import *
 if not os.path.exists('./weights/'):
     os.makedirs('./weights/')
 
+if not os.path.exists('./txts/'):
+    os.makedirs('./txts/')
+
 '''
 Config file parser
 '''
@@ -40,6 +43,23 @@ else:
 root_path_list = cp.get('weight', 'root_path').strip('[').strip(']').replace(' ', '').split(',')
 truth_root_list = cp.get('weight', 'truth_root').strip('[').strip(']').replace(' ', '').split(',')
 event_root_list = cp.get('weight', 'event_root').strip('[').strip(']').replace(' ', '').split(',')
+cut_weight = cp.get('weight', 'cut_weight').replace('\'', '')
+pyroot_fit_str = cp.get('weight', 'pyroot_fit')
+if pyroot_fit_str == 'True' or pyroot_fit_str == 'true':
+    pyroot_fit = True
+elif pyroot_fit_str == 'False' or pyroot_fit_str == 'false':
+    pyroot_fit = False
+else:
+    print("WRONG: pyroot_fit in example.conf must be 'True'/'true' or 'False'/'false', now is " + cp.get('weight', 'pyroot_fit'))
+    exit(-1)
+manual_update_str = cp.get('weight', 'manual_update')
+if manual_update_str == 'True' or manual_update_str == 'true':
+    manual_update = True
+elif manual_update_str == 'False' or manual_update_str == 'false':
+    manual_update = False
+else:
+    print("WRONG: manual_update in example.conf must be 'True'/'true' or 'False'/'false', now is " + cp.get('weight', 'manual_update'))
+    exit(-1)
 truth_tree = cp.get('weight', 'truth_tree')
 event_tree = cp.get('weight', 'event_tree')
 
@@ -127,6 +147,8 @@ for label, gaexs, geeff, xtitle, xs_ytitle, eff_ytitle in zip(label_list, gaexs_
 is_continue = raw_input('Do you want to continue? (Yes/No)')
 if is_continue == 'No':
     exit(-1)
+elif is_continue == 'Yes':
+    pass
 else:
     print('you have enetred an unwanted string, now exiting...')
     exit(-1)
@@ -134,12 +156,16 @@ else:
 '''
 update cross sections
 '''
-update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, func_list, root_path_list, truth_root_list, event_root_list, truth_tree, event_tree, shape_dep)
+if not manual_update:
+    update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, func_list, root_path_list, truth_root_list, event_root_list, truth_tree, event_tree, shape_dep, cut_weight, pyroot_fit)
+if not ((shape_dep and not pyroot_fit and manual_update) or (shape_dep and pyroot_fit) or (not shape_dep)):
+    print("INFO: please update new xs files manually and continue, after updating, please set manual_update in example.conf to be 'True' or 'true'")
+    exit(-1)
 
 '''
 draw updated cross sections
 '''
-gaexs_list, geeff_list = fill_xs(new_xs_list)
+gaexs_list, geeff_list = fill_xs(label_list, new_xs_list, iter_new)
 for label, gaexs, geeff, xtitle, xs_ytitle, eff_ytitle in zip(label_list, gaexs_list, geeff_list, xtitle_list, xs_ytitle_list, eff_ytitle_list):
     xs_mbc = TCanvas('xs_mbc_' + label + '_' + iter_new, '', 700, 600)
     set_canvas_style(xs_mbc)
