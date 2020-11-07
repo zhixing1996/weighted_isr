@@ -43,13 +43,13 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
     xmin_rm_pipi, xmax_rm_pipi = param_rm_pipi(sample)
     xbins_rm_pipi = int((xmax_rm_pipi - xmin_rm_pipi)/0.005)
     try:
-        data_path = '/besfs/users/$USER/bes/DDPIPI/v0.2/data/'+str(sample)+'/data_'+str(sample)+'_after.root'
+        data_path = '/besfs/users/jingmq/bes/DDPIPI/v0.2/data/'+str(sample)+'/data_'+str(sample)+'_after.root'
         f_data = TFile(data_path, 'READ')
         t_data = f_data.Get('save')
         entries_data = t_data.GetEntries()
         logging.info('data('+str(sample)+') entries :'+str(entries_data))
 
-        sideband_path = '/besfs/users/$USER/bes/DDPIPI/v0.2/data/'+str(sample)+'/data_'+str(sample)+'_sideband.root'
+        sideband_path = '/besfs/users/jingmq/bes/DDPIPI/v0.2/data/'+str(sample)+'/data_'+str(sample)+'_sideband.root'
         f_sideband = TFile(sideband_path, 'READ')
         t_sideband = f_sideband.Get('save')
         entries_sideband = t_sideband.GetEntries()
@@ -57,7 +57,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
 
         for ipath in path:
             if 'psipp' in ipath:
-                psipp_path = '/besfs/users/$USER/bes/DDPIPI/v0.2/sigMC/psipp/'+str(sample)+'/sigMC_psipp_'+str(sample)+'_after.root'
+                psipp_path = '/besfs/users/jingmq/bes/DDPIPI/v0.2/sigMC/psipp/'+str(sample)+'/sigMC_psipp_'+str(sample)+'_after.root'
                 f_psipp = TFile(psipp_path, 'READ')
                 t_psipp = f_psipp.Get('save')
                 f_psipp_w = TFile(ipath, 'READ')
@@ -83,7 +83,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
                     exit(-1)
 
             if 'DDPIPI' in ipath:
-                DDPIPI_path = '/besfs/users/$USER/bes/DDPIPI/v0.2/sigMC/DDPIPI/'+str(sample)+'/sigMC_D_D_PI_PI_'+str(sample)+'_after.root'
+                DDPIPI_path = '/besfs/users/jingmq/bes/DDPIPI/v0.2/sigMC/DDPIPI/'+str(sample)+'/sigMC_D_D_PI_PI_'+str(sample)+'_after.root'
                 f_DDPIPI = TFile(DDPIPI_path, 'READ')
                 t_DDPIPI = f_DDPIPI.Get('save')
                 f_DDPIPI_w = TFile(ipath, 'READ')
@@ -109,7 +109,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
                     exit(-1)
 
             if 'D1_2420' in ipath:
-                D1_2420_path = '/besfs/users/$USER/bes/DDPIPI/v0.2/sigMC/D1_2420/'+str(sample)+'/sigMC_D1_2420_'+str(sample)+'_after.root'
+                D1_2420_path = '/besfs/users/jingmq/bes/DDPIPI/v0.2/sigMC/D1_2420/'+str(sample)+'/sigMC_D1_2420_'+str(sample)+'_after.root'
                 f_D1_2420 = TFile(D1_2420_path, 'READ')
                 t_D1_2420 = f_D1_2420.Get('save')
                 f_D1_2420_w = TFile(ipath, 'READ')

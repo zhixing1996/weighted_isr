@@ -30,7 +30,7 @@ if not os.path.exists('./txts/'):
     os.makedirs('./txts/')
 
 '''
-Config file parser
+Configuration file parser
 '''
 cp = ConfigParser.SafeConfigParser()
 cp.read('weighted_isr.conf')
