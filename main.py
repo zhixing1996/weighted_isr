@@ -75,7 +75,7 @@ truth_tree = cp.get('weight', 'truth_tree')
 event_tree = cp.get('weight', 'event_tree')
 
 '''
-USER DEFINE SECTION{ : fit functions for input cross sections
+USER DEFINE SECTION { : fit functions for input cross sections
 '''
 # formula of fit functions
 xmin, xmax = 4.2, 4.8
