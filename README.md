@@ -1,5 +1,5 @@
 # Tookits for An Iterative Weighting Method to Apply the ISR Correction
-Maybe you have noticed that a new method for ISR iteration has been proposed by Liangliang Wang (llwang@ihep.ac.cn) and Wenyu Sun (sunwenyu@ihep.ac.cn) (theory introduction of this method could be found in doc/Introduction.pdf), recently. After the check doing by Tong Liu (liutong2016@ihep.ac.cn) (MC generation examples could be found in example/), this method has been proved correct and is very time saving. This repository provides a relative general package for user to use this method. The main codes are based on Lianjin Wu's codes (wulj@ihep.ac.cn), which is very appreciating. If you are not familiar with GitHub operations, you can copy the codes from /besfs/groups/cal/dedx/jingmq/bes/weighted_isr, if the storage path changes, the newest path will be shown in here, also all the changes will be updated to this repository in GitHub. 
+Maybe you have noticed that a new method for ISR iteration has been proposed by Liangliang Wang (llwang@ihep.ac.cn) and Wenyu Sun (sunwenyu@ihep.ac.cn) (theory introduction of this method could be found in doc/Introduction.pdf), recently. After the check doing by Tong Liu (liutong2016@ihep.ac.cn) (MC generation examples could be found in example/), this method has been proved correct and is very time saving. This repository provides a relative general package for user to use this method. The main codes are based on Lianjin Wu's codes (wulj@ihep.ac.cn), which is very appreciated. If you are not familiar with GitHub operations, you can copy the codes from /besfs/groups/cal/dedx/jingmq/bes/weighted_isr, if the storage path changes, the newest path will be updated in here, also, all the changes will be updated to this repository in GitHub. 
 
 ## Install
 
@@ -69,7 +69,11 @@ Python Version: 2.7.3, should not be python3.x
     8. pyroot_fit: True/true or False/false, only if shape_dep is set to be True/true, this part will be useful: using dedicated pyROOT Roofit program (tools/simul_fit.py) in this package to do FIT_EVT, this is a recommended way to do iteration since it will be very automatically, however, this will also put a pretty strict requirement on user's pyROOT knowledge, user can also dismiss this function by setting this part to be False/false with manual_update to be False(false), and then update output files (relative nsignal info) in xs_new, and then execute 'python main.py' again, especially, if you want to use pyROOT Roofit program, this part must be set to be False/false;
     9. manual_update: whether user has updated output results in xs_new (relative nsignal info) manually or not.
 
-4. [WIP]: Working in progress, any recommends will be welcomed sincerely! Some functions of this repository haven't been tested by explicit analysis, if you would like to use this repository, please be sure to share your feelings and errors encountered (jingmq@ihep.ac.cn)!
+4. [weight_other]: weight other distributions or other root files using the known fitted TF1 functions.
+    1. switch: on/off, if the switch is set to be 'on', [weight] section will not be executed, program concerning [weight_other] will be executed instead, while if it is set to be 'off', the situation will be the opposite;
+    2. xtitle, xs_ytitle, eff_ytitle, iter, root_path, event_root, event_tree, cut
+
+5. [WIP]: Working in progress, any recommends will be welcomed sincerely! Some functions of this repository haven't been tested by explicit analysis, if you would like to use this repository, please be sure to share your feelings and errors encountered (jingmq@ihep.ac.cn)!
 
 List input of [patch] -- label, [path] -- xs_old, and xs_new, and ini_isr, [draw] -- xtitle, xs_ytitle, and eff_ytitle, and [weight] -- root_path, event_root, and truth_root is supported in case the number of components in your FIT_EVT is larger than one, but you have to pay attention to the order of your input.
 
