@@ -54,6 +54,5 @@ def weight_other(label_list, iter, xs_list, tfunc_list, par_list, par_range_list
                     print('executing {0} -- {1} -- {2}'.format(label, iter, str(int(sample))))
                     temp1, temp2, temp3 = cal_weight(sample, ecms, chevent, func, True, label, iter, 'event', cut)
                 except Exception as e:
-                    print str(e)
                     '''
                     '''
