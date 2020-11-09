@@ -66,7 +66,7 @@ Python Version: 2.7.3, should not be python3.x
                 if t_in.pdgid[i] == 90022: mc_truth.SetPxPyPzE(t_in.p4_mc_all[i*4 + 0], t_in.p4_mc_all[i*4 + 1], t_in.p4_mc_all[i*4 + 2], t_in.p4_mc_all[i*4 + 3])
         m_m_truthall[0] = all_truth.M()
         ```
-    7. cut_weight: some extra cuts, not recommend to add in this repository, better to apply all the cuts before executing the program;
+    7. cut: some extra cuts, not recommend to add in this repository, better to apply all the cuts before executing the program;
     8. pyroot_fit: True/true or False/false, only if shape_dep is set to be True/true, this part will be useful: using dedicated pyROOT Roofit program (tools/simul_fit.py) in this package to do FIT_EVT, this is a recommended way to do iteration since it will be very automatically, however, this will also put a pretty strict requirement on user's pyROOT knowledge, user can also dismiss this function by setting this part to be False/false with manual_update to be False(false), and then update output files (relative nsignal info) in xs_new, and then execute 'python main.py' again, especially, if you want to use pyROOT Roofit program, this part must be set to be False/false;
     9. manual_update: whether user has updated output results in xs_new (relative nsignal info) manually or not.
 
