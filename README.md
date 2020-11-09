@@ -43,7 +43,7 @@ Python Version: 2.7.3, should not be python3.x
         2. ConExc: for m_m_truthall, can be recognized as gamma* (Particle ID: 90022)
         There is an example code:
         ```
-        from ROOT TLorentzVector
+        from ROOT import TLorentzVector
         mc_truth = TLorentzVector(0, 0, 0, 0)
         all_truth = TLorentzVector(0, 0, 0, 0)
         is_psi4260_gen = False
