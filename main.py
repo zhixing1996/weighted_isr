@@ -15,8 +15,9 @@ from tools.setup import set_pub_style, set_graph_style, set_pad_style, set_canva
 import tools.xs_func as xs_func
 set_pub_style()
 from tools.fit_xs import fit_xs
-from tools.update import update
+from tools.update import update, cal_weight
 from tools.fill_xs import fill_xs
+from tools.weight_other import weight_other
 from ROOT import TCanvas, TMath, TF1, TChain
 from math import *
 
@@ -54,7 +55,7 @@ else:
 root_path_list = cp.get('weight', 'root_path').strip('[').strip(']').replace(' ', '').split(',')
 truth_root_list = cp.get('weight', 'truth_root').strip('[').strip(']').replace(' ', '').split(',')
 event_root_list = cp.get('weight', 'event_root').strip('[').strip(']').replace(' ', '').split(',')
-cut_weight = cp.get('weight', 'cut_weight').replace('\'', '')
+cut_weight = cp.get('weight', 'cut').replace('\'', '')
 pyroot_fit_str = cp.get('weight', 'pyroot_fit')
 if pyroot_fit_str == 'True' or pyroot_fit_str == 'true':
     pyroot_fit = True
@@ -73,6 +74,7 @@ else:
     exit(-1)
 truth_tree = cp.get('weight', 'truth_tree')
 event_tree = cp.get('weight', 'event_tree')
+switch_wo = cp.get('weight_other', 'switch')
 
 '''
 USER DEFINE SECTION { : fit functions for input cross sections
@@ -140,55 +142,75 @@ tfunc_list = [tfunc_D1_2420, tfunc_psipp, tfunc_DDPIPI]
 '''
 fitting of input cross sections
 '''
-is_fit = True
-gaexs_list_fit, geeff_list_fit, func_list = fit_xs(old_xs_list, tfunc_list, par_list, par_range_list, is_fit)
-for label, gaexs, geeff, xtitle, xs_ytitle, eff_ytitle in zip(label_list, gaexs_list_fit, geeff_list_fit, xtitle_list, xs_ytitle_list, eff_ytitle_list):
-    xs_mbc = TCanvas('xs_mbc_' + label + '_' + iter_old + '_fit', '', 700, 600)
-    set_canvas_style(xs_mbc)
-    xs_mbc.cd()
-    set_graph_style(gaexs, xtitle, xs_ytitle)
-    gaexs.Draw('ap')
-    xs_mbc.SaveAs('./figs/xs_' + label + '_' + iter_old + '_fit.pdf')
-    eff_mbc = TCanvas('eff_mbc_' + label + '_' + iter_old + '_fit', '', 700, 600)
-    set_canvas_style(eff_mbc)
-    eff_mbc.cd()
-    set_graph_style(geeff, xtitle, eff_ytitle)
-    geeff.Draw('ap')
-    eff_mbc.SaveAs('./figs/eff_' + label + '_' + iter_old + '_fit.pdf')
-is_continue = raw_input('Do you want to continue? (Yes/No)')
-if is_continue == 'No':
-    exit(-1)
-elif is_continue == 'Yes':
-    pass
-else:
-    print('you have enetred an unwanted string, now exiting...')
-    exit(-1)
+if cp.get('weight_other', 'switch') == 'off':
+    is_fit = True
+    gaexs_list_fit, geeff_list_fit, func_list = fit_xs(old_xs_list, tfunc_list, par_list, par_range_list, is_fit)
+    for label, gaexs, geeff, xtitle, xs_ytitle, eff_ytitle in zip(label_list, gaexs_list_fit, geeff_list_fit, xtitle_list, xs_ytitle_list, eff_ytitle_list):
+        xs_mbc = TCanvas('xs_mbc_' + label + '_' + iter_old + '_fit', '', 700, 600)
+        set_canvas_style(xs_mbc)
+        xs_mbc.cd()
+        set_graph_style(gaexs, xtitle, xs_ytitle)
+        gaexs.Draw('ap')
+        xs_mbc.SaveAs('./figs/xs_' + label + '_' + iter_old + '_fit.pdf')
+        eff_mbc = TCanvas('eff_mbc_' + label + '_' + iter_old + '_fit', '', 700, 600)
+        set_canvas_style(eff_mbc)
+        eff_mbc.cd()
+        set_graph_style(geeff, xtitle, eff_ytitle)
+        geeff.Draw('ap')
+        eff_mbc.SaveAs('./figs/eff_' + label + '_' + iter_old + '_fit.pdf')
+    is_continue = raw_input('Do you want to continue? (Yes/No)')
+    if is_continue == 'No':
+        exit(-1)
+    elif is_continue == 'Yes':
+        pass
+    else:
+        print('you have enetred an unwanted string, now exiting...')
+        exit(-1)
 
 '''
 update cross sections
 '''
-if not manual_update:
-    update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, func_list, root_path_list, truth_root_list, event_root_list, truth_tree, event_tree, shape_dep, cut_weight, pyroot_fit)
-if not ((shape_dep and not pyroot_fit and manual_update) or (shape_dep and pyroot_fit) or (not shape_dep)):
-    print("INFO: please update new xs files manually and continue, after updating, please set manual_update in weighted_isr.conf to be 'True' or 'true'")
-    exit(-1)
+if cp.get('weight_other', 'switch') == 'off':
+    if not manual_update:
+        update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, func_list, root_path_list, truth_root_list, event_root_list, truth_tree, event_tree, shape_dep, cut_weight, pyroot_fit)
+    if not ((shape_dep and not pyroot_fit and manual_update) or (shape_dep and pyroot_fit) or (not shape_dep)):
+        print("INFO: please update new xs files manually and continue, after updating, please set manual_update in weighted_isr.conf to be 'True' or 'true'")
+        exit(-1)
 
 '''
 draw updated cross sections
 '''
-gaexs_list, geeff_list = fill_xs(label_list, new_xs_list, iter_new)
-for label, gaexs, geeff, xtitle, xs_ytitle, eff_ytitle in zip(label_list, gaexs_list, geeff_list, xtitle_list, xs_ytitle_list, eff_ytitle_list):
-    xs_mbc = TCanvas('xs_mbc_' + label + '_' + iter_new, '', 700, 600)
-    set_canvas_style(xs_mbc)
-    xs_mbc.cd()
-    set_graph_style(gaexs, xtitle, xs_ytitle)
-    gaexs.Draw('ap')
-    xs_mbc.SaveAs('./figs/xs_' + label + '_' + iter_new + '.pdf')
-    eff_mbc = TCanvas('eff_mbc_' + label + '_' + iter_new, '', 700, 600)
-    set_canvas_style(eff_mbc)
-    eff_mbc.cd()
-    set_graph_style(geeff, xtitle, eff_ytitle)
-    geeff.Draw('ap')
-    eff_mbc.SaveAs('./figs/eff_' + label + '_' + iter_new + '.pdf')
- 
+if cp.get('weight_other', 'switch') == 'off':
+    gaexs_list, geeff_list = fill_xs(label_list, new_xs_list, iter_new)
+    for label, gaexs, geeff, xtitle, xs_ytitle, eff_ytitle in zip(label_list, gaexs_list, geeff_list, xtitle_list, xs_ytitle_list, eff_ytitle_list):
+        xs_mbc = TCanvas('xs_mbc_' + label + '_' + iter_new, '', 700, 600)
+        set_canvas_style(xs_mbc)
+        xs_mbc.cd()
+        set_graph_style(gaexs, xtitle, xs_ytitle)
+        gaexs.Draw('ap')
+        xs_mbc.SaveAs('./figs/xs_' + label + '_' + iter_new + '.pdf')
+        eff_mbc = TCanvas('eff_mbc_' + label + '_' + iter_new, '', 700, 600)
+        set_canvas_style(eff_mbc)
+        eff_mbc.cd()
+        set_graph_style(geeff, xtitle, eff_ytitle)
+        geeff.Draw('ap')
+        eff_mbc.SaveAs('./figs/eff_' + label + '_' + iter_new + '.pdf')
+
+'''
+weight other
+'''
+if cp.get('weight_other', 'switch') == 'on':
+    label_list_wo = cp.get('weight_other', 'label').strip('[').strip(']').replace(' ', '').split(',')
+    xtitle_list_wo = cp.get('weight_other', 'xtitle').strip('[').strip(']').replace(' ', '').replace('\'', '').split(',')
+    xs_ytitle_list_wo = cp.get('weight_other', 'xs_ytitle').strip('[').strip(']').replace(' ', '').replace('\'', '').split(',')
+    eff_ytitle_list_wo = cp.get('weight_other', 'eff_ytitle').strip('[').strip(']').replace(' ', '').replace('\'', '').split(',')
+    iter_wo = cp.get('weight_other', 'iter')
+    root_path_list_wo = cp.get('weight_other', 'root_path').strip('[').strip(']').replace(' ', '').split(',')
+    event_root_list_wo = cp.get('weight_other', 'event_root').strip('[').strip(']').replace(' ', '').split(',')
+    xs_list_wo = cp.get('weight_other', 'xs').strip('[').strip(']').replace(' ', '').split(',')
+    event_tree_wo = cp.get('weight_other', 'event_tree')
+    cut_wo = cp.get('weight_other', 'cut').replace('\'', '')
+
+    weight_other(label_list_wo, iter_wo, xs_list_wo, tfunc_list, par_list, par_range_list, xtitle_list_wo, xs_ytitle_list_wo, eff_ytitle_list_wo, root_path_list_wo, event_root_list_wo, event_tree_wo, cut_wo)
+
 raw_input('Press <Enter> to end...')

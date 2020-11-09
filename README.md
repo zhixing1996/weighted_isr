@@ -39,6 +39,32 @@ Python Version: 2.7.3, should not be python3.x
     4. truth_root: name of root files containing MC truth info, should be put under root_path, if the name contains sample info, like sigMC_D1_2420_4420_truth.root, please replace 4420 with ECMS;
     5. event_tree: tree name in [3], M(truth) branch name in the tree must be m_m_truthall;
     6. truth_tree: tree name in [4], M(truth) branch name in the tree must be m_m_truthall;
+        1. KKMC: for m_m_truthall: The FSR photons other than those from psi(4260) (Particle ID: 9030443) have to be added;
+        2. ConExc: can be recognized as gamma* (Particle ID: 90022)
+        There is an example code:
+        ```
+        from ROOT TLorentzVector
+        mc_truth = TLorentzVector(0, 0, 0, 0)
+        all_truth = TLorentzVector(0, 0, 0, 0)
+        is_psi4260_gen = False
+        is_gamma_star_gen = False
+        for i in xrange(t_in.indexmc):
+            if t_in.pdgid[i] == 9030443: is_psi4260_gen = True # for KKMC
+            if t_in.pdgid[i] == 90022: is_gamma_star_gen = True # for ConExc
+        tag_psi4260 = False
+        for i in xrange(t_in.indexmc):
+            if is_psi4260_gen == True:
+                if t_in.pdgid[i] == 9030443:
+                    tag_psi4260 = True
+                    mc_truth.SetPxPyPzE(t_in.p4_mc_all[i*4 + 0], t_in.p4_mc_all[i*4 + 1], t_in.p4_mc_all[i*4 + 2], t_in.p4_mc_all[i*4 + 3])
+                    all_truth += mc_truth
+                if t_in.pdgid[i] == -22 and tag_psi4260 == False:
+                    mc_truth.SetPxPyPzE(t_in.p4_mc_all[i*4 + 0], t_in.p4_mc_all[i*4 + 1], t_in.p4_mc_all[i*4 + 2], t_in.p4_mc_all[i*4 + 3])
+                    all_truth += mc_truth
+            if is_gamma_star_gen == True:
+                if t_in.pdgid[i] == 90022: mc_truth.SetPxPyPzE(t_in.p4_mc_all[i*4 + 0], t_in.p4_mc_all[i*4 + 1], t_in.p4_mc_all[i*4 + 2], t_in.p4_mc_all[i*4 + 3])
+        m_m_truthall[0] = all_truth.M()
+        ```
     7. cut_weight: some extra cuts, not recommend to add in this repository, better to apply all the cuts before executing the program;
     8. pyroot_fit: True/true or False/false, only if shape_dep is set to be True/true, this part will be useful: using dedicated pyROOT Roofit program (tools/simul_fit.py) in this package to do FIT_EVT, this is a recommended way to do iteration since it will be very automatically, however, this will also put a pretty strict requirement on user's pyROOT knowledge, user can also dismiss this function by setting this part to be False/false with manual_update to be False(false), and then update output files (relative nsignal info) in xs_new, and then execute 'python main.py' again, especially, if you want to use pyROOT Roofit program, this part must be set to be False/false;
     9. manual_update: whether user has updated output results in xs_new (relative nsignal info) manually or not.
