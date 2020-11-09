@@ -114,7 +114,7 @@ Or user can use 'grep "USER DEFINE SECTION" [files]' command to search which sec
 
 > txts: directoy, created automatically by main.py, stores cross sections info (containing the values of cross sections, created by tools/fill_xs.py);
 
-> weights: directory, created automatically by main.py, stores root files containing calculated events weights used in FIT_EVT (created by tools/update.py, scaling MC shape).
+> weights: directory, created automatically by main.py, stores root files containing calculated events weights used in FIT_EVT (created by tools/update.py, scaling MC shape), if switch of [weight_other] is 'on', the related root files containing calculated events weights will also be stored in here.
 
 ## For developers 
  
