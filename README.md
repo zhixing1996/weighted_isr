@@ -40,7 +40,8 @@ Python Version: 2.7.3, should not be python3.x
     5. event_tree: tree name in [3], M(truth) branch name in the tree must be m_m_truthall;
     6. truth_tree: tree name in [4], M(truth) branch name in the tree must be m_m_truthall;
         1. KKMC: for m_m_truthall, the FSR photons other than those from psi(4260) (Particle ID: 9030443) have to be added;
-        2. ConExc: for m_m_truthall, can be recognized as gamma* (Particle ID: 90022)
+        2. ConExc: for m_m_truthall, can be recognized as gamma* (Particle ID: 90022);
+
         There is an example code:
         ```
         from ROOT import TLorentzVector
