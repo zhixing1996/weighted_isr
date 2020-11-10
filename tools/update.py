@@ -14,7 +14,7 @@ from ROOT import TF1, TChain, TH1D, TFile, TTree
 import operator
 from array import array
 
-def cal_weight(sample, ecms, chain, tfunc, shape_dep = False, label = '', iter_new = '', sample_type = 'truth', cut = ''):
+def cal_weight(sample, ecms, chain, tfunc, shape_dep = False, label = '', iter_new = '', sample_type = 'truth', cut = '', weights_out = './weights'):
     ''' ARGUE: 1. input data sample
                2. input data ecms
                3. input TChain/TTree
@@ -24,9 +24,10 @@ def cal_weight(sample, ecms, chain, tfunc, shape_dep = False, label = '', iter_n
                7. patch number of input data
                8. sample type
                9. cut
+               10. output path of weight files
     '''
     if (sample_type == 'event' and shape_dep):
-        wf = './weights/weighted_' + label + '_' + str(int(sample)) + '_' + iter_new + '.root'
+        wf = weights_out + '/weighted_' + label + '_' + str(int(sample)) + '_' + iter_new + '.root'
         f_weight = TFile(wf, 'RECREATE')
         t_weight = TTree('weight', 'weight')
         m_weight = array('d', [0])
@@ -50,7 +51,7 @@ def cal_weight(sample, ecms, chain, tfunc, shape_dep = False, label = '', iter_n
         return wf, float(wsumtotal), float(sumtotal)
     else: return float(wsumtotal), float(sumtotal)
 
-def weight(sample, ecms, chtruth, chevent, tfunc, shape_dep = False, label = '', iter_new = '', cut = ''):
+def weight(sample, ecms, chtruth, chevent, tfunc, shape_dep = False, label = '', iter_new = '', cut = '', weights_out = './weights_out'):
     ''' ARGUE: 1. input data sample
                2. input data ecms
                3. input TChain/TTree for truth
@@ -60,21 +61,22 @@ def weight(sample, ecms, chtruth, chevent, tfunc, shape_dep = False, label = '',
                7. label of input data
                8. patch number of input data (next)
                9. cut
+               10. output path of weight files
     '''
     if shape_dep:
-        wsumtru, sumtru = cal_weight(sample, ecms, chtruth, tfunc, shape_dep, label, iter_new, 'truth', '')
-        wf, wsumsig, sumsig = cal_weight(sample, ecms, chevent, tfunc, shape_dep, label, iter_new, 'event', cut)
+        wsumtru, sumtru = cal_weight(sample, ecms, chtruth, tfunc, shape_dep, label, iter_new, 'truth', '', '')
+        wf, wsumsig, sumsig = cal_weight(sample, ecms, chevent, tfunc, shape_dep, label, iter_new, 'event', cut, weights_out)
         weff, eff = wsumsig/wsumtru, sumsig/sumtru
         print('wntru:{:<10.2f}wnsig:{:<10.2f}weff:{:<10.5f} --   ntru:{:<10.2f}nsig:{:<10.2f}eff:{:<10.5f}'.format(wsumtru, wsumsig, weff, sumtru, sumsig, eff))
         return wf, wsumtru, weff, sumtru, eff
     else:
-        wsumtru, sumtru = cal_weight(sample, ecms, chtruth, tfunc, shape_dep, label, iter_new, 'truth', '')
-        wsumsig, sumsig = cal_weight(sample, ecms, chevent, tfunc, shape_dep, label, iter_new, 'event', cut)
+        wsumtru, sumtru = cal_weight(sample, ecms, chtruth, tfunc, shape_dep, label, iter_new, 'truth', '', '')
+        wsumsig, sumsig = cal_weight(sample, ecms, chevent, tfunc, shape_dep, label, iter_new, 'event', cut, '')
         weff, eff = wsumsig/wsumtru, sumsig/sumtru
         print('wntru:{:<10.2f}wnsig:{:<10.2f}weff:{:<10.5f} --   ntru:{:<10.2f}nsig:{:<10.2f}eff:{:<10.5f}'.format(wsumtru, wsumsig, weff, sumtru, sumsig, eff))
         return wsumtru, weff, sumtru, eff
 
-def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_list, root_path_list, truth_root_list, event_root_list, truth_tree, event_tree, shape_dep = False, cut = '', pyroot_fit = False):
+def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_list, root_path_list, truth_root_list, event_root_list, truth_tree, event_tree, shape_dep = False, cut = '', pyroot_fit = False, weights_out = './weights'):
     ''' ARGUE: 1. label list
                2. new iteration tag
                3. old data source file path and name
@@ -89,6 +91,7 @@ def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_l
                12. whether mc shape dependent or not
                13. cut
                14. using dedicted pyroot fit or not
+               15. output path of weight files
     '''
     if not len(label_list) == len(old_xs_list) == len(new_xs_list) == len(ini_isr_list) == len(tfunc_list) == len(root_path_list) == len(truth_root_list) == len(event_root_list):
         print('WRONG: array size of label_list, old_xs, new_xs, ini_isr, tfunc, root_path, truth_path, truth_root and event_root should be the same')
@@ -113,9 +116,9 @@ def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_l
                     chevent.Add(eventroot)
                     print('executing {0} -- {1} -- {2}'.format(label, iter_new, str(int(sample))))
                     if shape_dep:
-                        wf, wsumtru, wsumeff, sumtru, sumeff = weight(sample, ecms, chtruth, chevent, tfunc, shape_dep, label, iter_new, cut)
+                        wf, wsumtru, wsumeff, sumtru, sumeff = weight(sample, ecms, chtruth, chevent, tfunc, shape_dep, label, iter_new, cut, weights_out)
                         wf_list.append(wf)
-                    else: wsumtru, wsumeff, sumtru, sumeff = weight(sample, ecms, chtruth, chevent, tfunc, shape_dep, label, iter_new, cut)
+                    else: wsumtru, wsumeff, sumtru, sumeff = weight(sample, ecms, chtruth, chevent, tfunc, shape_dep, label, iter_new, cut, weights_out)
                     wisr = float(fisrs[1]) * wsumtru * pow(sumtru, -1)
                     print('wisr:{:<10.5f}iniisr:{:<10.5f}'.format(wisr, float(fisrs[1])))
                     lines_out.append('{:<7.0f}{:<10.5f}{:<10.2f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.3f}{:<10.3f}{:<10.5f}{:<10.5f}{:<10.5f}\n'.format(sample, ecms, lum, br, nsig, nsigerrl, nsigerrh, wsumeff, wisr, vp, N0))
@@ -132,7 +135,7 @@ def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_l
         wf_dic_temp = {}
         wf_dic = {}
         for wf in wf_list:
-            sample = wf.split('.')[1].split('/')[2].strip('weighted_').strip(iter_new).split('_')[-2]
+            sample = wf.split('/')[-1].split('.')[0].split('_')[-2]
             wf_dic_temp[wf] = sample
         for k1, v1 in wf_dic_temp.items():
             path = []
