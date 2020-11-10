@@ -12,7 +12,6 @@ import sys, os
 from array import array
 sys.dont_write_bytecode = True
 from tools.setup import set_pub_style, set_graph_style, set_pad_style, set_canvas_style
-import tools.xs_func as xs_func
 set_pub_style()
 from tools.fit_xs import fit_xs
 from tools.update import update, cal_weight
@@ -48,37 +47,39 @@ elif shape_dep_str == 'False' or shape_dep_str == 'false':
 else:
     print("WRONG: shape_dep in weighted_isr.conf must be 'True'/'true' or 'False'/'false', now is " + cp.get('weight', 'shape_dep'))
     exit(-1)
-root_path_list = cp.get('weight', 'root_path').strip('[').strip(']').replace(' ', '').split(',')
-truth_root_list = cp.get('weight', 'truth_root').strip('[').strip(']').replace(' ', '').split(',')
-event_root_list = cp.get('weight', 'event_root').strip('[').strip(']').replace(' ', '').split(',')
-cut_weight = cp.get('weight', 'cut').replace('\'', '')
-pyroot_fit_str = cp.get('weight', 'pyroot_fit')
-if pyroot_fit_str == 'True' or pyroot_fit_str == 'true':
-    pyroot_fit = True
-elif pyroot_fit_str == 'False' or pyroot_fit_str == 'false':
-    pyroot_fit = False
-else:
-    print("WRONG: pyroot_fit in weighted_isr.conf must be 'True'/'true' or 'False'/'false', now is " + cp.get('weight', 'pyroot_fit'))
-    exit(-1)
-manual_update_str = cp.get('weight', 'manual_update')
-if manual_update_str == 'True' or manual_update_str == 'true':
-    manual_update = True
-elif manual_update_str == 'False' or manual_update_str == 'false':
-    manual_update = False
-else:
-    print("WRONG: manual_update in weighted_isr.conf must be 'True'/'true' or 'False'/'false', now is " + cp.get('weight', 'manual_update'))
-    exit(-1)
-truth_tree = cp.get('weight', 'truth_tree')
-event_tree = cp.get('weight', 'event_tree')
-weights_out = cp.get('weight', 'weights_out').replace('\'', '')
-if not os.path.isdir(weights_out):
-    print('WRONG: ' + weights_out + ' does not exist, please check')
-    exit(-1)
+if shape_dep:
+    root_path_list = cp.get('weight', 'root_path').strip('[').strip(']').replace(' ', '').split(',')
+    truth_root_list = cp.get('weight', 'truth_root').strip('[').strip(']').replace(' ', '').split(',')
+    event_root_list = cp.get('weight', 'event_root').strip('[').strip(']').replace(' ', '').split(',')
+    cut_weight = cp.get('weight', 'cut').replace('\'', '')
+    pyroot_fit_str = cp.get('weight', 'pyroot_fit')
+    if pyroot_fit_str == 'True' or pyroot_fit_str == 'true':
+        pyroot_fit = True
+    elif pyroot_fit_str == 'False' or pyroot_fit_str == 'false':
+        pyroot_fit = False
+    else:
+        print("WRONG: pyroot_fit in weighted_isr.conf must be 'True'/'true' or 'False'/'false', now is " + cp.get('weight', 'pyroot_fit'))
+        exit(-1)
+    manual_update_str = cp.get('weight', 'manual_update')
+    if manual_update_str == 'True' or manual_update_str == 'true':
+        manual_update = True
+    elif manual_update_str == 'False' or manual_update_str == 'false':
+        manual_update = False
+    else:
+        print("WRONG: manual_update in weighted_isr.conf must be 'True'/'true' or 'False'/'false', now is " + cp.get('weight', 'manual_update'))
+        exit(-1)
+    truth_tree = cp.get('weight', 'truth_tree')
+    event_tree = cp.get('weight', 'event_tree')
+    weights_out = cp.get('weight', 'weights_out').replace('\'', '')
+    if not os.path.isdir(weights_out):
+        print('WRONG: ' + weights_out + ' does not exist, please check')
+        exit(-1)
 
 '''
 USER DEFINE SECTION { : fit functions for input cross sections
 '''
 # formula of fit functions
+import tools.xs_func as xs_func
 xmin, xmax = 4.2, 4.8
 func = xs_func.xs_func(100, xmin, xmax)
 def func_D1_2420(x, par):
