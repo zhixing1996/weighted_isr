@@ -110,7 +110,7 @@ Or user can use 'grep "USER DEFINE SECTION" [files]' command to search which sec
 
 > log: directory, cloned from GitHub, stores updated cross sections info (created by tools/update.py);
 
-> txts: directoy, created automatically by main.py, stores cross sections info (containing the values of cross sections, created by tools/fill_xs.py);
+> txts: directoy, created automatically by main.py, stores cross sections info (containing the values of cross sections, created by tools/fill_xs.py) as well as line-shapes of fitted input cross sections;
 
 > [weight]: weights_out: directory, assigned by user, stores root files containing calculated events weights used in FIT_EVT (created by tools/update.py, scaling MC shape).
 

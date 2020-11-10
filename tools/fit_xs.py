@@ -12,7 +12,7 @@ import logging
 from math import *
 from ROOT import TF1, TGraphAsymmErrors, TGraphErrors, TCanvas
 
-def fit(xs_file, tfunc, is_fit = True):
+def fit(label, iter, xs_file, tfunc, xmin, xmax, is_fit = True):
     ''' ARGUE: 1. data source file path and its name
                2. fit function
                3. is fit or not
@@ -44,26 +44,34 @@ def fit(xs_file, tfunc, is_fit = True):
             '''
     if is_fit:
         gaexs.Fit(tfunc)
+        path_user = './txts/xs_user_' + label + '_' + iter + '.dat'
+        f_user = open(path_user, 'w')
+        for i in xrange(int((xmax - xmin)/0.001)):
+            ecm = xmin + i * 0.001
+            xs_ecm = tfunc.Eval(ecm)
+            out = str(ecm) + ' ' + str(xs_ecm) + '\n'
+            f_user.write(out)
+        f_user.close()
     return gaexs, geeff, tfunc
 
-def fit_xs(xs_list, tfunc_list, par_list, par_range_list, is_fit = True):
+def fit_xs(label_list, iter, xs_list, tfunc_list, par_list, par_range_list, xmin, xmax, is_fit = True):
     ''' ARGUE: 1. data source file path and its name
                2. TF1 fit function
                3. initial parameters for fit function
                4. parameterrange
                5. is fit or not
     '''
-    if not len(tfunc_list) == len(xs_list) == len(par_list) == len(par_range_list):
+    if not len(label_list) == len(tfunc_list) == len(xs_list) == len(par_list) == len(par_range_list):
         print 'WRONG: please add necessary info in weighted_isr.conf or main.py (array size of tfunc_list, xs_list, par_list and par_range_list should be the same)!'
         exit(-1)
     gaexs_list, geeff_list, func_list = [], [], []
-    for xs, tfunc, par, par_range in zip(xs_list, tfunc_list, par_list, par_range_list):
+    for label, xs, tfunc, par, par_range in zip(label_list, xs_list, tfunc_list, par_list, par_range_list):
         if is_fit:
             tfunc.SetParameters(par)
             for ilimit, low, high in par_range:
                 tfunc.SetParLimits(ilimit, low, high)
             tfunc.SetLineColor(2)
-        igaexs, igeeff, itfunc = fit(xs, tfunc, is_fit)
+        igaexs, igeeff, itfunc = fit(label, iter, xs, tfunc, xmin, xmax, is_fit)
         gaexs_list.append(igaexs)
         geeff_list.append(igeeff)
         func_list.append(itfunc)

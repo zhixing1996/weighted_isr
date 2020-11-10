@@ -142,7 +142,7 @@ tfunc_list = [tfunc_D1_2420, tfunc_psipp, tfunc_DDPIPI]
 fitting of input cross sections
 '''
 is_fit = True
-gaexs_list_fit, geeff_list_fit, func_list = fit_xs(old_xs_list, tfunc_list, par_list, par_range_list, is_fit)
+gaexs_list_fit, geeff_list_fit, func_list = fit_xs(label_list, iter_old, old_xs_list, tfunc_list, par_list, par_range_list, xmin, xmax, is_fit)
 for label, gaexs, geeff, xtitle, xs_ytitle, eff_ytitle in zip(label_list, gaexs_list_fit, geeff_list_fit, xtitle_list, xs_ytitle_list, eff_ytitle_list):
     xs_mbc = TCanvas('xs_mbc_' + label + '_' + iter_old + '_fit', '', 700, 600)
     set_canvas_style(xs_mbc)
