@@ -13,9 +13,13 @@ from math import *
 from ROOT import TF1, TGraphAsymmErrors, TGraphErrors, TCanvas
 
 def fit(label, iter, xs_file, tfunc, xmin, xmax, is_fit = True):
-    ''' ARGUE: 1. data source file path and its name
-               2. fit function
-               3. is fit or not
+    ''' ARGUE: 1. label of your input
+               2. iter name
+               3. data source file path and its name
+               4. fit function
+               5. minimum of tfunc
+               6. maximum of tfunc
+               7. is fit or not
     '''
     ipoint, gaexs, geeff = 0, TGraphAsymmErrors(0), TGraphErrors(0)
     for line in open(xs_file):
@@ -55,11 +59,15 @@ def fit(label, iter, xs_file, tfunc, xmin, xmax, is_fit = True):
     return gaexs, geeff, tfunc
 
 def fit_xs(label_list, iter, xs_list, tfunc_list, par_list, par_range_list, xmin, xmax, is_fit = True):
-    ''' ARGUE: 1. data source file path and its name
-               2. TF1 fit function
-               3. initial parameters for fit function
-               4. parameterrange
-               5. is fit or not
+    ''' ARGUE: 1. label of your input
+               2. iter name
+               3. data source file path and its name
+               4. TF1 fit function
+               5. initial parameters for fit function
+               6. parameterrange
+               7. minimum of tfunc
+               8. maximum of tfunc
+               9. is fit or not
     '''
     if not len(label_list) == len(tfunc_list) == len(xs_list) == len(par_list) == len(par_range_list):
         print 'WRONG: please add necessary info in weighted_isr.conf or main.py (array size of tfunc_list, xs_list, par_list and par_range_list should be the same)!'

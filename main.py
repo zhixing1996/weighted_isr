@@ -23,9 +23,6 @@ from math import *
 if not os.path.exists('./figs/'):
     os.makedirs('./figs/')
 
-if not os.path.exists('./weights/'):
-    os.makedirs('./weights/')
-
 if not os.path.exists('./txts/'):
     os.makedirs('./txts/')
 
@@ -74,6 +71,9 @@ else:
 truth_tree = cp.get('weight', 'truth_tree')
 event_tree = cp.get('weight', 'event_tree')
 weights_out = cp.get('weight', 'weights_out').replace('\'', '')
+if not os.path.isdir(weights_out):
+    print('WRONG: ' + weights_out + ' does not exist, please check')
+    exit(-1)
 
 '''
 USER DEFINE SECTION { : fit functions for input cross sections
