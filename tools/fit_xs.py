@@ -58,7 +58,7 @@ def fit(label, iter, xs_file, tfunc, xmin, xmax, is_fit = True):
         f_user.close()
     return gaexs, geeff, tfunc
 
-def fit_xs(label_list, iter, xs_list, tfunc_list, par_list, par_range_list, xmin, xmax, is_fit = True):
+def fit_xs(label_list, iter, xs_list, tfunc_list, par_list, par_range_list, xmin_list, xmax_list, is_fit = True):
     ''' ARGUE: 1. label of your input
                2. iter name
                3. data source file path and its name
@@ -69,11 +69,11 @@ def fit_xs(label_list, iter, xs_list, tfunc_list, par_list, par_range_list, xmin
                8. maximum of tfunc
                9. is fit or not
     '''
-    if not len(label_list) == len(tfunc_list) == len(xs_list) == len(par_list) == len(par_range_list):
-        print 'WRONG: please add necessary info in weighted_isr.conf or main.py (array size of tfunc_list, xs_list, par_list and par_range_list should be the same)!'
+    if not len(label_list) == len(tfunc_list) == len(xs_list) == len(par_list) == len(par_range_list) == len(xmin_list) == len(xmax_list):
+        print 'WRONG: please add necessary info in weighted_isr.conf or main.py (array size of tfunc_list, xs_list, par_list, par_range_list, xmin_list, and xmax_list should be the same)!'
         exit(-1)
     gaexs_list, geeff_list, func_list = [], [], []
-    for label, xs, tfunc, par, par_range in zip(label_list, xs_list, tfunc_list, par_list, par_range_list):
+    for label, xs, tfunc, par, par_range, xmin, xmax in zip(label_list, xs_list, tfunc_list, par_list, par_range_list, xmin_list, xmax_list):
         if is_fit:
             tfunc.SetParameters(par)
             for ilimit, low, high in par_range:

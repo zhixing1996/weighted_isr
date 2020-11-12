@@ -80,16 +80,18 @@ USER DEFINE SECTION { : fit functions for input cross sections
 '''
 # formula of fit functions
 import tools.xs_func as xs_func
-xmin, xmax = 4.2, 4.8
-func = xs_func.xs_func(100, xmin, xmax)
+xmin_D1_2420, xmax_D1_2420 = 4.2, 4.8
+func1 = xs_func.xs_func(100, xmin_D1_2420, xmax_D1_2420)
 def func_D1_2420(x, par):
     ''' function for correlated breit wigner: e+e- --> D1D'''
     xx = x[0]
     resonances = []
     resonances.append((4.410, 0.082, par[0], par[1]))
     resonances.append((4.520, 0.064, par[0], par[2]))
-    bw = func.getCorrelatedBreitWigners(xx, resonances, xmin)
-    return pow(abs(bw), 2) + func.getPHSPFactor(xx) * par[3] + par[4] * xx + par[5]
+    bw = func1.getCorrelatedBreitWigners(xx, resonances, xmin_D1_2420)
+    return pow(abs(bw), 2) + func1.getPHSPFactor(xx) * par[3] + par[4] * xx + par[5]
+xmin_psipp, xmax_psipp = 4.2, 4.8
+func2 = xs_func.xs_func(100, xmin_psipp, xmax_psipp)
 def func_psipp(x, par):
     ''' function for correlated breit wigner: e+e- --> psipp pipi '''
     xx = x[0]
@@ -97,8 +99,9 @@ def func_psipp(x, par):
     resonances.append((4.350, 0.060, par[0], par[1]))
     resonances.append((4.421, 0.058, par[0], par[2]))
     resonances.append((4.520, 0.064, par[0], par[3]))
-    bw = func.getCorrelatedBreitWigners(xx, resonances, xmin)
-    return pow(abs(bw), 2) + func.getPHSPFactor(xx) * par[4] + par[5] * xx + par[6]
+    bw = func2.getCorrelatedBreitWigners(xx, resonances, xmin_psipp)
+    return pow(abs(bw), 2) + func2.getPHSPFactor(xx) * par[4] + par[5] * xx + par[6]
+xmin_DDPIPI, xmax_DDPIPI = 4.2, 4.8
 def func_DDPIPI(x, par):
     ''' function for correlated breit wigner: e+e- --> DDpipi '''
     xx = x[0]
@@ -107,7 +110,6 @@ def func_DDPIPI(x, par):
 par_D1_2420 = array('d', [1.0, 0.1, 0.1, 1.0, 0, 0])
 par_psipp = array('d', [1.0, 0.1, 0.1, 0.1, 1.0, .0, .0])
 par_DDPIPI = array('d', [1.0, 1.0])
-par_list = [par_D1_2420, par_psipp, par_DDPIPI]
 # parameters range of fit functions
 par_range_D1_2420 = [
     [0, -50.0, 50.0],
@@ -129,11 +131,15 @@ par_range_DDPIPI = [
     [0, -100.0, 100.0],
     [1, -100.0, 100.0]
 ]
+# of TF1 fit functions
+tfunc_D1_2420 = TF1('tfunc_D1_2420', func_D1_2420, xmin_D1_2420, xmax_D1_2420, len(par_D1_2420))
+tfunc_psipp = TF1('tfunc_psipp', func_psipp, xmin_psipp, xmax_psipp, len(par_psipp))
+tfunc_DDPIPI = TF1('tfunc_DDPIPI', func_DDPIPI, xmin_DDPIPI, xmax_DDPIPI, len(par_DDPIPI))
+# necessary list
+xmin_list = [xmin_D1_2420, xmin_psipp, xmin_DDPIPI]
+xmax_list = [xmax_D1_2420, xmax_psipp, xmax_DDPIPI]
+par_list = [par_D1_2420, par_psipp, par_DDPIPI]
 par_range_list = [par_range_D1_2420, par_range_psipp, par_range_DDPIPI]
-# list of TF1 fit functions
-tfunc_D1_2420 = TF1('tfunc_D1_2420', func_D1_2420, xmin, xmax, len(par_D1_2420))
-tfunc_psipp = TF1('tfunc_psipp', func_psipp, xmin, xmax, len(par_psipp))
-tfunc_DDPIPI = TF1('tfunc_DDPIPI', func_DDPIPI, xmin, xmax, len(par_DDPIPI))
 tfunc_list = [tfunc_D1_2420, tfunc_psipp, tfunc_DDPIPI]
 '''
 } USER DEFINE SECTION
@@ -143,7 +149,7 @@ tfunc_list = [tfunc_D1_2420, tfunc_psipp, tfunc_DDPIPI]
 fitting of input cross sections
 '''
 is_fit = True
-gaexs_list_fit, geeff_list_fit, func_list = fit_xs(label_list, iter_old, old_xs_list, tfunc_list, par_list, par_range_list, xmin, xmax, is_fit)
+gaexs_list_fit, geeff_list_fit, func_list = fit_xs(label_list, iter_old, old_xs_list, tfunc_list, par_list, par_range_list, xmin_list, xmax_list, is_fit)
 for label, gaexs, geeff, xtitle, xs_ytitle, eff_ytitle in zip(label_list, gaexs_list_fit, geeff_list_fit, xtitle_list, xs_ytitle_list, eff_ytitle_list):
     xs_mbc = TCanvas('xs_mbc_' + label + '_' + iter_old + '_fit', '', 700, 600)
     set_canvas_style(xs_mbc)
