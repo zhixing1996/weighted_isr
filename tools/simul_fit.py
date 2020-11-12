@@ -290,13 +290,13 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
                 '''
 
     if sample > 4311:
-        new_D1_2420 = '{:.0f}    {:<10.3f}{:<10.2f}{:<10.4f}{:<10.1f}{:<10.1f}{:<10.1f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.1f}\n'.format(sample, ecms, lum, br, n2420.getVal(), n2420.getError(), n2420.getError(), eff_D1_2420, ISR_D1_2420, VP_D1_2420, N0_D1_2420)
+        new_D1_2420 = '{:.0f}    {:<10.3f}{:<10.5f}{:<10.4f}{:<10.1f}{:<10.1f}{:<10.1f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.1f}\n'.format(sample, ecms, lum, br, n2420.getVal(), n2420.getError(), n2420.getError(), eff_D1_2420, ISR_D1_2420, VP_D1_2420, N0_D1_2420)
         update_texts(xs_D1_2420, str(sample), new_D1_2420)
 
-    new_psipp = '{:.0f}    {:<10.3f}{:<10.2f}{:<10.4f}{:<10.1f}{:<10.1f}{:<10.1f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.1f}\n'.format(sample, ecms, lum, br, npsipp.getVal(), npsipp.getError(), npsipp.getError(), eff_psipp, ISR_psipp, VP_psipp, N0_psipp)
+    new_psipp = '{:.0f}    {:<10.3f}{:<10.5f}{:<10.4f}{:<10.1f}{:<10.1f}{:<10.1f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.1f}\n'.format(sample, ecms, lum, br, npsipp.getVal(), npsipp.getError(), npsipp.getError(), eff_psipp, ISR_psipp, VP_psipp, N0_psipp)
     update_texts(xs_psipp, str(sample), new_psipp)
 
-    new_DDPIPI = '{:.0f}    {:<10.3f}{:<10.2f}{:<10.4f}{:<10.1f}{:<10.1f}{:<10.1f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.1f}\n'.format(sample, ecms, lum, br, nDDPIPI.getVal(), nDDPIPI.getError(), nDDPIPI.getError(), eff_DDPIPI, ISR_DDPIPI, VP_DDPIPI, N0_DDPIPI)
+    new_DDPIPI = '{:.0f}    {:<10.3f}{:<10.5f}{:<10.4f}{:<10.1f}{:<10.1f}{:<10.1f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.1f}\n'.format(sample, ecms, lum, br, nDDPIPI.getVal(), nDDPIPI.getError(), nDDPIPI.getError(), eff_DDPIPI, ISR_DDPIPI, VP_DDPIPI, N0_DDPIPI)
     update_texts(xs_DDPIPI, str(sample), new_DDPIPI)
 
     # Draw fitting results
