@@ -79,7 +79,7 @@ List input of [patch] -- label, [path] -- xs_old, and xs_new, and ini_isr, [draw
 
 > tools: programs used in main.py, especially, tools/simul_fit_cal.py is used for calibration of FIT_EVT, and params.py stores the parameters used in FIT_EVT, if you have set pyroot_fit to be False, tools/simul_fit.py, tools/simul_fit_cal.py, and tools/params.py will not be used.
 
-> log: input and output cross section info (without the value of cross sections, will be provided in another directory), escpecially, the value of energy in cross section info files must be the same as that in simulation joboption in example/.
+> log: input and output cross section info (without the value of cross sections, will be provided in another directory), escpecially, the value of center of mass energy in cross section info files must be the same as that in simulation joboption in example/.
 
 1. The format of the input cross section info files could be found in the cloned repository;
 2. Commenting is supported from line 2 of cross section info files in log/ by using '#' in head of the line, but no black space is allowed between '#' and head of the line, if '#' is added, when doing cross sections fitting (referred as FIT_XS) corresponding data sample will not be used, this is very useful if there is some data sample which has very low statistics level existing in your FIT_XS.
