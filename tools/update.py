@@ -31,7 +31,9 @@ def cal_weight(sample, ecms, chain, tfunc, shape_dep = False, label = '', iter_n
         f_weight = TFile(wf, 'RECREATE')
         t_weight = TTree('weight', 'weight')
         m_weight = array('d', [0])
+        m_m_weight = array('d', [0])
         t_weight.Branch('m_weight', m_weight, 'm_weightl/D')
+        t_weight.Branch('m_m_weight', m_m_weight, 'm_m_weightl/D')
     wsumtotal, sumtotal = 0., 0.
     tree = chain.CopyTree(cut)
     for evt in tree:
@@ -40,6 +42,7 @@ def cal_weight(sample, ecms, chain, tfunc, shape_dep = False, label = '', iter_n
         w = winvm / wecms
         if (sample_type == 'event' and shape_dep):
             m_weight[0] = w
+            m_m_weight[0] = w * evt.m_m_truthall
             t_weight.Fill()
         if not wecms == 0:
             wsumtotal += w
