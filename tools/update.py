@@ -106,7 +106,7 @@ def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_l
             try:
                 fargs = map(float, line.strip().strip('\n').split())
                 fisrs = map(float, iniisr.strip().strip('\n').split())
-                sample, ecms, lum, br, nsig, nsigerrl, nsigerrh, vp, N0 = fargs[0], fargs[1], fargs[2], fargs[3], fargs[4], fargs[5], fargs[6], fargs[9], fargs[10]
+                sample, ecms, lum, br, nsig, nsigerrl, nsigerrh, isr_old, vp, N0 = fargs[0], fargs[1], fargs[2], fargs[3], fargs[4], fargs[5], fargs[6], fargs[8], fargs[9], fargs[10]
                 truthroot, eventroot = root_path + '/' + str(int(sample)) + '/' + truth_root.replace('ECMS', str(int(sample))), root_path + '/' + str(int(sample)) + '/' + event_root.replace('ECMS', str(int(sample)))
                 if not os.path.exists(root_path + '/' + str(int(sample))):
                     wsumtru, wsumeff, sumtru, sumeff, wisr = 0., 0., 0., 0., 0.
@@ -120,7 +120,7 @@ def update(label_list, iter_new, old_xs_list, new_xs_list, ini_isr_list, tfunc_l
                         wf_list.append(wf)
                     else: wsumtru, wsumeff, sumtru, sumeff = weight(sample, ecms, chtruth, chevent, tfunc, shape_dep, label, iter_new, cut, weights_out)
                     wisr = float(fisrs[1]) * wsumtru * pow(sumtru, -1)
-                    print('wisr:{:<10.5f}iniisr:{:<10.5f}'.format(wisr, float(fisrs[1])))
+                    print('wisr:{:<10.5f}iniisr:{:<10.5f}'.format(wisr, isr_old))
                     lines_out.append('{:<7.0f}{:<10.5f}{:<10.2f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.3f}{:<10.3f}{:<10.5f}{:<10.5f}{:<10.5f}\n'.format(sample, ecms, lum, br, nsig, nsigerrl, nsigerrh, wsumeff, wisr, vp, N0))
             except Exception as e:
                 lines_out.append(line)

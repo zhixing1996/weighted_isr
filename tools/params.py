@@ -152,16 +152,12 @@ def param_rm_D(ecms):
     LOW = 999.
     UP = 999.
     BINS = 999
-    if int(ecms) == 4090:
+    if int(ecms) == 4190:
         LOW = 2.2
-        UP = 2.33
-        BINS = int((UP - LOW)/0.002)
-    elif int(ecms) == 4190:
-        LOW = 2.22
         UP = 2.32
         BINS = int((UP - LOW)/0.002)
     elif int(ecms) == 4200:
-        LOW = 2.22
+        LOW = 2.2
         UP = 2.33
         BINS = int((UP - LOW)/0.002)
     elif int(ecms) == 4210:
@@ -173,16 +169,16 @@ def param_rm_D(ecms):
         UP = 2.35
         BINS = int((UP - LOW)/0.002)
     elif int(ecms) == 4230:
-        LOW = 2.2
+        LOW = 2.22
         UP = 2.36
         BINS = int((UP - LOW)/0.002)
     elif int(ecms) == 4237:
-        LOW = 2.18
+        LOW = 2.2
         UP = 2.37
         BINS = int((UP - LOW)/0.002)
     elif int(ecms) == 4245:
         LOW = 2.2
-        UP = 2.38
+        UP = 2.375
         BINS = int((UP - LOW)/0.002)
     elif int(ecms) == 4246:
         LOW = 2.23
@@ -197,7 +193,7 @@ def param_rm_D(ecms):
         UP = 2.4
         BINS = int((UP - LOW)/0.002)
     elif int(ecms) == 4280:
-        LOW = 2.18
+        LOW = 2.22
         UP = 2.41
         BINS = int((UP - LOW)/0.002)
     elif int(ecms) == 4290:
@@ -209,32 +205,32 @@ def param_rm_D(ecms):
         UP = 2.44
         BINS = 400
     elif int(ecms) == 4315:
-        LOW = 2.1
-        UP = 2.45
+        LOW = 2.21
+        UP = 2.445
         BINS = 300
     elif int(ecms) == 4340:
-        LOW = 2.2
-        UP = 2.47
+        LOW = 2.22
+        UP = 2.468
         BINS = 350
     elif int(ecms) == 4360:
-        LOW = 2.18
-        UP = 2.495
+        LOW = 2.22
+        UP = 2.488
         BINS = 300
     elif int(ecms) == 4380:
-        LOW = 2.18
+        LOW = 2.22
         UP = 2.505
         BINS = 400
     elif int(ecms) == 4390:
-        LOW = 2.2
+        LOW = 2.22
         UP = 2.53
         BINS = 300
     elif int(ecms) == 4400:
-        LOW = 2.22
+        LOW = 2.24
         UP = 2.53
         BINS = 400
     elif int(ecms) == 4420:
-        LOW = 2.22
-        UP = 2.55
+        LOW = 2.2
+        UP = 2.548
         BINS = 300
     elif int(ecms) == 4440:
         LOW = 2.21
@@ -257,7 +253,7 @@ def param_rm_D(ecms):
         UP = 2.735
         BINS = 400
     elif int(ecms) == 4610:
-        LOW = 2.22
+        LOW = 2.3
         UP = 2.75
         BINS = 400
     elif int(ecms) == 4620:
@@ -265,11 +261,11 @@ def param_rm_D(ecms):
         UP = 2.77
         BINS = 400
     elif int(ecms) == 4640:
-        LOW = 2.18
+        LOW = 2.24
         UP = 2.78
         BINS = 400
     elif int(ecms) == 4660:
-        LOW = 2.22
+        LOW = 2.24
         UP = 2.795
         BINS = 400
     elif int(ecms) == 4680:
@@ -278,7 +274,7 @@ def param_rm_D(ecms):
         BINS = 400
     elif int(ecms) == 4700:
         LOW = 2.16
-        UP = 2.82
+        UP = 2.825
         BINS = 400
     return LOW, UP, BINS
 
@@ -290,10 +286,10 @@ def param_rm_pipi(ecms):
         LOW = 3.73
         UP = 3.84
     elif int(ecms) == 4200:
-        LOW = 3.74
-        UP = 3.84
+        LOW = 3.73
+        UP = 3.86
     elif int(ecms) == 4210:
-        LOW = 3.74
+        LOW = 3.73
         UP = 3.86
     elif int(ecms) == 4220:
         LOW = 3.74
@@ -303,10 +299,10 @@ def param_rm_pipi(ecms):
         UP = 3.93
     elif int(ecms) == 4237:
         LOW = 3.73
-        UP = 3.94
+        UP = 3.93
     elif int(ecms) == 4245:
-        LOW = 3.72
-        UP = 3.9
+        LOW = 3.73
+        UP = 3.92
     elif int(ecms) == 4246:
         LOW = 3.735
         UP = 3.88
@@ -318,22 +314,22 @@ def param_rm_pipi(ecms):
         UP = 3.95
     elif int(ecms) == 4280:
         LOW = 3.74
-        UP = 3.93
+        UP = 3.9
     elif int(ecms) == 4290:
         LOW = 3.73
         UP = 3.95
     elif int(ecms) == 4310:
-        LOW = 3.74
+        LOW = 3.735
         UP = 3.97
     elif int(ecms) == 4315:
-        LOW = 3.73
-        UP = 3.98
+        LOW = 3.74
+        UP = 3.97
     elif int(ecms) == 4340:
-        LOW = 3.73
-        UP = 4.01
+        LOW = 3.74
+        UP = 4.02
     elif int(ecms) == 4360:
-        LOW = 3.73
-        UP = 4.07
+        LOW = 3.74
+        UP = 4.03
     elif int(ecms) == 4380:
         LOW = 3.74
         UP = 4.03
@@ -341,42 +337,42 @@ def param_rm_pipi(ecms):
         LOW = 3.735
         UP = 4.05
     elif int(ecms) == 4400:
-        LOW = 3.74
-        UP = 4.05
+        LOW = 3.735
+        UP = 4.02
     elif int(ecms) == 4420:
         LOW = 3.74
-        UP = 4.1
+        UP = 4.07
     elif int(ecms) == 4440:
         LOW = 3.735
-        UP = 4.12
+        UP = 4.05
     elif int(ecms) == 4470:
         LOW = 3.74
-        UP = 4.1
+        UP = 4.07
     elif int(ecms) == 4530:
-        LOW = 3.74
-        UP = 4.15
+        LOW = 3.745
+        UP = 4.14
     elif int(ecms) == 4575:
         LOW = 3.74
-        UP = 4.16
+        UP = 4.135
     elif int(ecms) == 4600:
         LOW = 3.74
         UP = 4.28
     elif int(ecms) == 4610:
         LOW = 3.74
-        UP = 4.24
+        UP = 4.26
     elif int(ecms) == 4620:
         LOW = 3.735
         UP = 4.24
     elif int(ecms) == 4640:
-        LOW = 3.74
-        UP = 4.26
-    elif int(ecms) == 4660:
-        LOW = 3.73
+        LOW = 3.735
         UP = 4.28
+    elif int(ecms) == 4660:
+        LOW = 3.735
+        UP = 4.29
     elif int(ecms) == 4680:
         LOW = 3.74
         UP = 4.32
     elif int(ecms) == 4700:
         LOW = 3.735
-        UP = 4.33
+        UP = 4.34
     return LOW, UP
