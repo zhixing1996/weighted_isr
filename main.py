@@ -79,57 +79,57 @@ if shape_dep:
 USER DEFINE SECTION { : fit functions for input cross sections
 '''
 # formula of fit functions
-import tools.xs_func as xs_func
-xmin_D1_2420, xmax_D1_2420 = 4.2, 4.8
-func1 = xs_func.xs_func(100, xmin_D1_2420, xmax_D1_2420)
+import tools.xs_func_two_body as xs_func_two_body
+xmin_D1_2420, xmax_D1_2420 = 4.293, 4.8
+m_D1_2420, m_Dm = 2.4232, 1.86965
+func1 = xs_func_two_body.xs_func(100, xmin_D1_2420, xmax_D1_2420, m_D1_2420, m_Dm)
 def func_D1_2420(x, par):
     ''' function for correlated breit wigner: e+e- --> D1D'''
     xx = x[0]
     resonances = []
-    resonances.append((4.410, 0.082, par[0], par[1]))
-    resonances.append((4.520, 0.064, par[0], par[2]))
+    resonances.append((4.420, 0.084, par[0], 0))
+    resonances.append((4.530, 0.064, par[1], par[2]))
     bw = func1.getCorrelatedBreitWigners(xx, resonances, xmin_D1_2420)
-    return pow(abs(bw), 2) + func1.getPHSPFactor(xx) * par[3] + par[4] * xx + par[5]
-xmin_psipp, xmax_psipp = 4.2, 4.8
-func2 = xs_func.xs_func(100, xmin_psipp, xmax_psipp)
+    return pow(abs(bw), 2) + par[3]
+import tools.xs_func_three_body as xs_func_three_body
+xmin_psipp, xmax_psipp = 4.0535, 4.9985
+func2 = xs_func_three_body.xs_func(100, xmin_psipp, xmax_psipp)
 def func_psipp(x, par):
     ''' function for correlated breit wigner: e+e- --> psipp pipi '''
     xx = x[0]
     resonances = []
-    resonances.append((4.350, 0.060, par[0], par[1]))
-    resonances.append((4.421, 0.058, par[0], par[2]))
-    resonances.append((4.520, 0.064, par[0], par[3]))
+    resonances.append((4.371, 0.078, par[0], 0))
+    resonances.append((4.420, 0.042, par[1], par[2]))
+    resonances.append((4.680, 0.032, par[3], par[4]))
     bw = func2.getCorrelatedBreitWigners(xx, resonances, xmin_psipp)
-    return pow(abs(bw), 2) + func2.getPHSPFactor(xx) * par[4] + par[5] * xx + par[6]
-xmin_DDPIPI, xmax_DDPIPI = 4.2, 4.8
+    return pow(abs(bw), 2) + par[5]
+xmin_DDPIPI, xmax_DDPIPI = 4.0205, 4.9985
 def func_DDPIPI(x, par):
     ''' function for correlated breit wigner: e+e- --> DDpipi '''
     xx = x[0]
     return par[0] * pow(xx, -2) * TMath.Exp(-1 * par[1] * (xx - 4.015))
 # initial parameters of fit functions
-par_D1_2420 = array('d', [1.0, 0.1, 0.1, 1.0, 0, 0])
-par_psipp = array('d', [1.0, 0.1, 0.1, 0.1, 1.0, .0, .0])
-par_DDPIPI = array('d', [1.0, 1.0])
+par_D1_2420 = array('d', [1.0, 0.1, 0.1, 1.0, 1.0])
+par_psipp = array('d', [0.1, 0.1, 0.1, 0.1, 0.1, 0.1])
+par_DDPIPI = array('d', [1.0, -1.0])
 # parameters range of fit functions
 par_range_D1_2420 = [
     [0, -50.0, 50.0],
     [1, -50.0, 50.0],
     [2, -50.0, 50.0],
-    [3, -10.0, 10.0],
-    [4, -10.0, 10.0],
-    [5, -10.0, 10.0]
+    [3, -50.0, 50.0]
 ]
 par_range_psipp = [
-    [0, -50.0, 50.0],
-    [1, -50.0, 50.0],
+    [0, 0.0, 10.0],
+    [1, 0.0, 10.0],
     [2, -50.0, 50.0],
-    [3, -10.0, 10.0],
-    [4, -10.0, 10.0],
+    [3, 0.0, 10.0],
+    [4, -50.0, 50.0],
     [5, -50.0, 50.0]
 ]
 par_range_DDPIPI = [
-    [0, -100.0, 100.0],
-    [1, -100.0, 100.0]
+    [0, 0.0, 10.0],
+    [1, -50.0, 50.0]
 ]
 # of TF1 fit functions
 tfunc_D1_2420 = TF1('tfunc_D1_2420', func_D1_2420, xmin_D1_2420, xmax_D1_2420, len(par_D1_2420))

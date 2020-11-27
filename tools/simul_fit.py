@@ -139,7 +139,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
         sys.exit()
     
     N_D1_2420, N_PSIPP, N_DDPIPI = num_rm_D(sample)
-    if sample > 4311:
+    if sample > 4316:
         n2420 = RooRealVar('n2420', 'n2420', 500, 0, N_D1_2420)
     nsideband = RooRealVar('nsideband', 'nsideband', int(entries_sideband/2.))
     npsipp = RooRealVar('npsipp', 'npsipp', 0, N_PSIPP)
@@ -203,7 +203,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
     covpdf_psipp = RooFFTConvPdf('covpdf_psipp', 'covpdf_psipp', rm_pipi, pdf_psipp_rm_pipi, gauss_rm_pipi)
 
     # model for RM(D)
-    if sample > 4311:
+    if sample > 4316:
         hist_D1_2420_rm_D = RooDataHist('hist_D1_2420_rm_D', 'hist_D1_2420_rm_D', RooArgList(rm_D), h_D1_2420_rm_D)
         pdf_D1_2420_rm_D = RooHistPdf('pdf_D1_2420_rm_D', 'pdf_D1_2420_rm_D', RooArgSet(rm_D), hist_D1_2420_rm_D, 2)
         mean_rm_D = RooRealVar('mean_rm_D', 'mean_rm_D', 0, -0.01, 0.01)
@@ -216,7 +216,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
         model_rm_D = RooAddPdf('model_rm_D', 'model_rm_D', RooArgList(pdf_sideband_rm_D, pdf_psipp_rm_D, pdf_DDPIPI_rm_D), RooArgList(nsideband, npsipp, nDDPIPI))
 
     # model for RM(Dmiss)
-    if sample > 4311:
+    if sample > 4316:
         cut = ''
         hist_D1_2420_rm_Dmiss = RooDataHist('hist_D1_2420_rm_Dmiss', 'hist_D1_2420_rm_Dmiss', RooArgList(rm_Dmiss), h_D1_2420_rm_Dmiss)
         pdf_D1_2420_rm_Dmiss = RooHistPdf('pdf_D1_2420_rm_Dmiss', 'pdf_D1_2420_rm_Dmiss', RooArgSet(rm_Dmiss), hist_D1_2420_rm_Dmiss, 2)
@@ -230,7 +230,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
         model_rm_Dmiss = RooAddPdf('model_rm_Dmiss', 'model_rm_Dmiss', RooArgList(pdf_sideband_rm_Dmiss, pdf_psipp_rm_Dmiss, pdf_DDPIPI_rm_Dmiss), RooArgList(nsideband, npsipp, nDDPIPI))
 
     # model for RM(pipi)
-    if sample > 4311:
+    if sample > 4316:
         cut = ''
         hist_D1_2420_rm_pipi = RooDataHist('hist_D1_2420_rm_pipi', 'hist_D1_2420_rm_pipi', RooArgList(rm_pipi), h_D1_2420_rm_pipi)
         pdf_D1_2420_rm_pipi = RooHistPdf('pdf_D1_2420_rm_pipi', 'pdf_D1_2420_rm_pipi', RooArgSet(rm_pipi), hist_D1_2420_rm_pipi, 2)
@@ -255,7 +255,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
     eff_D1_2420 = 0.
     ISR_D1_2420 = 1.
     VP_D1_2420 = 1.
-    if sample > 4311:
+    if sample > 4316:
         with open(xs_D1_2420) as f:
             for line in f.readlines():
                 try:
@@ -289,14 +289,14 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
                 '''
                 '''
 
-    if sample > 4311:
-        new_D1_2420 = '{:.0f}    {:<10.3f}{:<10.5f}{:<10.4f}{:<10.1f}{:<10.1f}{:<10.1f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.1f}\n'.format(sample, ecms, lum, br, n2420.getVal(), n2420.getError(), n2420.getError(), eff_D1_2420, ISR_D1_2420, VP_D1_2420, N0_D1_2420)
+    if sample > 4316:
+        new_D1_2420 = '{:.0f}    {:<10.5f}{:<10.2f}{:<10.4f}{:<10.1f}{:<10.1f}{:<10.1f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.1f}\n'.format(sample, ecms, lum, br, n2420.getVal(), n2420.getError(), n2420.getError(), eff_D1_2420, ISR_D1_2420, VP_D1_2420, N0_D1_2420)
         update_texts(xs_D1_2420, str(sample), new_D1_2420)
 
-    new_psipp = '{:.0f}    {:<10.3f}{:<10.5f}{:<10.4f}{:<10.1f}{:<10.1f}{:<10.1f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.1f}\n'.format(sample, ecms, lum, br, npsipp.getVal(), npsipp.getError(), npsipp.getError(), eff_psipp, ISR_psipp, VP_psipp, N0_psipp)
+    new_psipp = '{:.0f}    {:<10.5f}{:<10.2f}{:<10.4f}{:<10.1f}{:<10.1f}{:<10.1f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.1f}\n'.format(sample, ecms, lum, br, npsipp.getVal(), npsipp.getError(), npsipp.getError(), eff_psipp, ISR_psipp, VP_psipp, N0_psipp)
     update_texts(xs_psipp, str(sample), new_psipp)
 
-    new_DDPIPI = '{:.0f}    {:<10.3f}{:<10.5f}{:<10.4f}{:<10.1f}{:<10.1f}{:<10.1f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.1f}\n'.format(sample, ecms, lum, br, nDDPIPI.getVal(), nDDPIPI.getError(), nDDPIPI.getError(), eff_DDPIPI, ISR_DDPIPI, VP_DDPIPI, N0_DDPIPI)
+    new_DDPIPI = '{:.0f}    {:<10.5f}{:<10.2f}{:<10.4f}{:<10.1f}{:<10.1f}{:<10.1f}{:<10.5f}{:<10.3f}{:<10.3f}{:<10.1f}\n'.format(sample, ecms, lum, br, nDDPIPI.getVal(), nDDPIPI.getError(), nDDPIPI.getError(), eff_DDPIPI, ISR_DDPIPI, VP_DDPIPI, N0_DDPIPI)
     update_texts(xs_DDPIPI, str(sample), new_DDPIPI)
 
     # Draw fitting results
@@ -312,7 +312,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
     set_frame_style(frame_rm_D, xtitle_rm_D, ytitle_rm_D)
     combData.plotOn(frame_rm_D, RooFit.Cut('SAMPLE==SAMPLE::rm_D'), RooFit.Name('data'))
     sim_pdf.plotOn(frame_rm_D, RooFit.Slice(SAMPLE, 'rm_D'), RooFit.Components('pdf_sideband_rm_D'), RooFit.ProjWData(RooArgSet(SAMPLE), combData), RooFit.LineColor(kGreen), RooFit.FillStyle(1001), RooFit.FillColor(3), RooFit.LineColor(3), RooFit.VLines(), RooFit.DrawOption('F'))
-    if sample > 4311:
+    if sample > 4316:
         sim_pdf.plotOn(frame_rm_D, RooFit.Slice(SAMPLE, 'rm_D'), RooFit.Components('covpdf_D1_2420_D'), RooFit.ProjWData(RooArgSet(SAMPLE), combData), RooFit.LineColor(kRed), RooFit.LineWidth(2), RooFit.LineStyle(kDashed))
     sim_pdf.plotOn(frame_rm_D, RooFit.Slice(SAMPLE, 'rm_D'), RooFit.Components('pdf_psipp_rm_D'), RooFit.ProjWData(RooArgSet(SAMPLE), combData), RooFit.LineColor(kBlue), RooFit.LineWidth(2), RooFit.LineStyle(kDashed))
     sim_pdf.plotOn(frame_rm_D, RooFit.Slice(SAMPLE, 'rm_D'), RooFit.Components('pdf_DDPIPI_rm_D'), RooFit.ProjWData(RooArgSet(SAMPLE), combData), RooFit.LineColor(37), RooFit.LineWidth(2), RooFit.LineStyle(kDashed))
@@ -322,7 +322,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
     name = []
     name.append('Data')
     name.append('Backgrounds')
-    if sample > 4311:
+    if sample > 4316:
         name.append('D_{1}(2420)^{+}D^{-}')
     name.append('#psi(3770)#pi^{+}#pi^{-}')
     name.append('D^{+}D^{-}#pi^{+}#pi^{-}')
@@ -384,7 +384,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
     set_frame_style(frame_rm_Dmiss, xtitle_rm_Dmiss, ytitle_rm_Dmiss)
     combData.plotOn(frame_rm_Dmiss, RooFit.Cut('SAMPLE==SAMPLE::rm_Dmiss'), RooFit.Name('data'))
     sim_pdf.plotOn(frame_rm_Dmiss, RooFit.Slice(SAMPLE, 'rm_Dmiss'), RooFit.Components('pdf_sideband_rm_Dmiss'), RooFit.ProjWData(RooArgSet(SAMPLE), combData), RooFit.LineColor(kGreen), RooFit.FillStyle(1001), RooFit.FillColor(3), RooFit.LineColor(3), RooFit.VLines(), RooFit.DrawOption('F'))
-    if sample > 4311:
+    if sample > 4316:
         sim_pdf.plotOn(frame_rm_Dmiss, RooFit.Slice(SAMPLE, 'rm_Dmiss'), RooFit.Components('covpdf_D1_2420_D'), RooFit.ProjWData(RooArgSet(SAMPLE), combData), RooFit.LineColor(kRed), RooFit.LineWidth(2), RooFit.LineStyle(kDashed))
     sim_pdf.plotOn(frame_rm_Dmiss, RooFit.Slice(SAMPLE, 'rm_Dmiss'), RooFit.Components('pdf_psipp_rm_Dmiss'), RooFit.ProjWData(RooArgSet(SAMPLE), combData), RooFit.LineColor(kBlue), RooFit.LineWidth(2), RooFit.LineStyle(kDashed))
     sim_pdf.plotOn(frame_rm_Dmiss, RooFit.Slice(SAMPLE, 'rm_Dmiss'), RooFit.Components('pdf_DDPIPI_rm_Dmiss'), RooFit.ProjWData(RooArgSet(SAMPLE), combData), RooFit.LineColor(37), RooFit.LineWidth(2), RooFit.LineStyle(kDashed))
@@ -394,7 +394,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
     name = []
     name.append('Data')
     name.append('Backgrounds')
-    if sample > 4311:
+    if sample > 4316:
         name.append('D_{1}(2420)^{+}D^{-}')
     name.append('#psi(3770)#pi^{+}#pi^{-}')
     name.append('D^{+}D^{-}#pi^{+}#pi^{-}')
@@ -456,7 +456,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
     set_frame_style(frame_rm_pipi, xtitle_rm_pipi, ytitle_rm_pipi)
     combData.plotOn(frame_rm_pipi, RooFit.Cut('SAMPLE==SAMPLE::rm_pipi'), RooFit.Name('data'))
     sim_pdf.plotOn(frame_rm_pipi, RooFit.Slice(SAMPLE, 'rm_pipi'), RooFit.Components('pdf_sideband_rm_pipi'), RooFit.ProjWData(RooArgSet(SAMPLE), combData), RooFit.LineColor(kGreen), RooFit.FillStyle(1001), RooFit.FillColor(3), RooFit.LineColor(3), RooFit.VLines(), RooFit.DrawOption('F'))
-    if sample > 4311:
+    if sample > 4316:
         sim_pdf.plotOn(frame_rm_pipi, RooFit.Slice(SAMPLE, 'rm_pipi'), RooFit.Components('pdf_D1_2420_rm_pipi'), RooFit.ProjWData(RooArgSet(SAMPLE), combData), RooFit.LineColor(kRed), RooFit.LineWidth(2), RooFit.LineStyle(kDashed))
     sim_pdf.plotOn(frame_rm_pipi, RooFit.Slice(SAMPLE, 'rm_pipi'), RooFit.Components('covpdf_psipp'), RooFit.ProjWData(RooArgSet(SAMPLE), combData), RooFit.LineColor(kBlue), RooFit.LineWidth(2), RooFit.LineStyle(kDashed))
     sim_pdf.plotOn(frame_rm_pipi, RooFit.Slice(SAMPLE, 'rm_pipi'), RooFit.Components('pdf_DDPIPI_rm_pipi'), RooFit.ProjWData(RooArgSet(SAMPLE), combData), RooFit.LineColor(37), RooFit.LineWidth(2), RooFit.LineStyle(kDashed))
@@ -466,7 +466,7 @@ def simul_fit(sample, path, patch, xs_list, cut = ''):
     name = []
     name.append('Data')
     name.append('Backgrounds')
-    if sample > 4311:
+    if sample > 4316:
         name.append('D_{1}(2420)^{+}D^{-}')
     name.append('#psi(3770)#pi^{+}#pi^{-}')
     name.append('D^{+}D^{-}#pi^{+}#pi^{-}')

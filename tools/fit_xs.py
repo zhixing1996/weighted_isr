@@ -31,8 +31,8 @@ def fit(label, iter, xs_file, tfunc, xmin, xmax, is_fit = True):
             USER DEFINE SECTION { formula of cross section
             '''
             xs = nsig/(2*lum*eff*br*isr*vp)
-            xserrl = nsigerrl/(2*lum*eff*br*isr*vp)
-            xserrh = nsigerrh/(2*lum*eff*br*isr*vp)
+            xserrl = sqrt(3)*nsigerrl/(2*lum*eff*br*isr*vp)
+            xserrh = sqrt(3)*nsigerrh/(2*lum*eff*br*isr*vp)
             '''
             } USER DEFINE SECTION
             '''
