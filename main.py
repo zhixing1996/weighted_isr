@@ -80,7 +80,7 @@ USER DEFINE SECTION { : fit functions for input cross sections
 '''
 # formula of fit functions
 import tools.xs_func_two_body as xs_func_two_body
-xmin_D1_2420, xmax_D1_2420 = 4.293, 4.8
+xmin_D1_2420, xmax_D1_2420 = 4.2935, 4.9985
 m_D1_2420, m_Dm = 2.4232, 1.86965
 func1 = xs_func_two_body.xs_func(100, xmin_D1_2420, xmax_D1_2420, m_D1_2420, m_Dm)
 def func_D1_2420(x, par):
